@@ -1,2 +1,2 @@
 # Cheese Cream Cheese
-This is a repository for a Hackathon
+This is a repository for a Hackathon.
