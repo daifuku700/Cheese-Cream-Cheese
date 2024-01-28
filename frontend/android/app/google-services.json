@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "810018335794",
+    "project_id": "cheese-cream-cheese",
+    "storage_bucket": "cheese-cream-cheese.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810018335794:android:9bafc8d16e9c320146e02b",
+        "android_client_info": {
+          "package_name": "com.example.cream_cheese_cream"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSMhn9JstLciDuQ-VJDzWOD7AoVdyz_eA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
