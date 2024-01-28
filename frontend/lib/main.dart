@@ -1,9 +1,8 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
-import 'pages/calendar_page.dart';
+import 'pages/schedule_page.dart';
 import 'pages/home_page.dart';
-
 
 void main() {
   runApp(const MyApp());
@@ -38,13 +37,12 @@ class _MainPageState extends State<MainPage> {
   int index = 0;
   final screens = [
     HomePage(),
-    CalendarPage(),
+    SchedulePage(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       //上のバー
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -52,7 +50,7 @@ class _MainPageState extends State<MainPage> {
       ),
 
       //中身（各自のページファイルでいじる）
-      body:screens[index],
+      body: screens[index],
 
       //下のナビゲーションバー
       bottomNavigationBar: CurvedNavigationBar(
@@ -61,11 +59,15 @@ class _MainPageState extends State<MainPage> {
         index: index,
         onTap: (index) => setState(() => this.index = index),
         items: [
-        Icon(Icons.home,
-          color: Colors.white,),
-        Icon(Icons.calendar_month,
-          color: Colors.white,),
-      ],
+          Icon(
+            Icons.home,
+            color: Colors.white,
+          ),
+          Icon(
+            Icons.format_list_bulleted,
+            color: Colors.white,
+          ),
+        ],
       ),
     );
   }
