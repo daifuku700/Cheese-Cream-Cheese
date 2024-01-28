@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyBuuB7aoY0ujqk_jSPnCGtaophUmX9bE84</string>
+	<key>GCM_SENDER_ID</key>
+	<string>810018335794</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.creamCheeseCream</string>
+	<key>PROJECT_ID</key>
+	<string>cheese-cream-cheese</string>
+	<key>STORAGE_BUCKET</key>
+	<string>cheese-cream-cheese.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:810018335794:ios:8075d521b12c8ffc46e02b</string>
+</dict>
+</plist>
