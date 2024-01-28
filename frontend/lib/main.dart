@@ -9,9 +9,9 @@ void main() {
   runApp(const MyApp());
 }
 
+//このアプリのテーマみたいなのを決められるやつ
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -34,6 +34,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  //画面推移に使う関数・配列
   int index = 0;
   final screens = [
     HomePage(),
@@ -43,11 +44,17 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+      //上のバー
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
+
+      //中身（各自のページファイルでいじる）
       body:screens[index],
+
+      //下のナビゲーションバー
       bottomNavigationBar: CurvedNavigationBar(
         color: Colors.black,
         backgroundColor: Colors.white,
