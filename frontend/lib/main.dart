@@ -45,8 +45,7 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       //上のバー
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        backgroundColor: Color(0xFFEFF8FF),
       ),
 
       //中身（各自のページファイルでいじる）
