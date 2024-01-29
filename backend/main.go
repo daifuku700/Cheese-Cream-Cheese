@@ -1,9 +1,19 @@
 package main
 
 import (
-	"fmt"
+	"ccc/controller"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	fmt.Println("Hello world 🍣")
+	router := gin.Default()
+
+	ccc := router.Group("/ccc")
+	{
+		ccc.GET("/weather", controller.WeatherGet)
+		ccc.POST("/weather", controller.WeatherPost)
+	}
+
+	router.Run(":8080")
 }
