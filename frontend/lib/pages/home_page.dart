@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
             Container(
               padding: const EdgeInsets.all(10.0),
               margin: const EdgeInsets.all(15.0),
-              height: 70,
+              height: 100,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(15.0),
@@ -105,14 +105,14 @@ class _HomePageState extends State<HomePage> {
 
                   //一つ一つの予定
                   Container(
-                    height: 15,
+                    height: 10,
                     child: ListView.builder(
                       itemCount: events.length,
                       itemBuilder: (context, index) {
                         return Container(
                           margin: const EdgeInsets.symmetric(
                               vertical: 5, horizontal: 10),
-                          height: 50,
+                          height: 20,
                           decoration: BoxDecoration(
                             color: index % 2 == 0
                                 ? Color(0xFFA9CF58)
