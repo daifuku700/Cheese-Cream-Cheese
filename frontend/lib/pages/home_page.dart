@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> fetchData() async {
     http.Response response =
-    await http.get(Uri.parse('http://localhost:8080/ccc/calendar'));
+        await http.get(Uri.parse('http://localhost:8080/ccc/calendar'));
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = json.decode(response.body);
@@ -41,6 +41,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print("hi");
     print(events);
     return Scaffold(
       backgroundColor: Color(0xFFEFF8FF),
@@ -78,7 +79,7 @@ class _HomePageState extends State<HomePage> {
             Container(
               padding: const EdgeInsets.all(10.0),
               margin: const EdgeInsets.all(15.0),
-              height:70,
+              height: 70,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(15.0),
@@ -103,32 +104,35 @@ class _HomePageState extends State<HomePage> {
                   ),
 
                   //一つ一つの予定
-                  // ListView.builder(
-                  //   itemCount: events.length,
-                  //   itemBuilder: (context, index) {
-                  //     return Container(
-                  //       margin: const EdgeInsets.symmetric(
-                  //           vertical: 5, horizontal: 10),
-                  //       height: 50,
-                  //       decoration: BoxDecoration(
-                  //         color: index % 2 == 0
-                  //             ? Color(0xFFA9CF58)
-                  //             : Color(0xFF75CDFF),
-                  //         borderRadius: BorderRadius.circular(20.0),
-                  //       ),
-                  //       child: Center(
-                  //         child: Text(
-                  //           events[index]['summary'] ?? '予定${index + 1}',
-                  //           style: TextStyle(
-                  //             fontSize: 15,
-                  //             fontWeight: FontWeight.normal,
-                  //           ),
-                  //           textAlign: TextAlign.center,
-                  //         ),
-                  //       ),
-                  //     );
-                  //   },
-                  // ),
+                  Container(
+                    height: 15,
+                    child: ListView.builder(
+                      itemCount: events.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 10),
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: index % 2 == 0
+                                ? Color(0xFFA9CF58)
+                                : Color(0xFF75CDFF),
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          child: Center(
+                            child: Text(
+                              events[index]['summary'] ?? '予定${index + 1}',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.normal,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
