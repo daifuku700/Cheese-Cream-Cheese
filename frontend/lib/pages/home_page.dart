@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -9,8 +12,37 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Map<String, String>> events = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    http.Response response =
+        await http.get(Uri.parse('http://localhost:8080/ccc/calendar'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = json.decode(response.body);
+      setState(() {
+        events = jsonData.map<Map<String, String>>((event) {
+          return {
+            'date': event['date'] as String,
+            'summary': event['summary'] as String,
+          };
+        }).toList();
+      });
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    print("hi");
+    print(events);
     return Scaffold(
       backgroundColor: Color(0xFFEFF8FF),
       body: Center(
@@ -45,21 +77,23 @@ class _HomePageState extends State<HomePage> {
 
             //今日の予定
             Container(
-                padding: const EdgeInsets.all(10.0),
-                margin: const EdgeInsets.all(15.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5), // Set shadow color
-                      spreadRadius: 2, // Set the spread radius of the shadow
-                      blurRadius: 5, // Set the blur radius of the shadow
-                      offset: Offset(0, 3), // Set the offset of the shadow
-                    ),
-                  ],
-                ),
-                child: Column(children: <Widget>[
+              padding: const EdgeInsets.all(10.0),
+              margin: const EdgeInsets.all(15.0),
+              height: 120,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5), // Set shadow color
+                    spreadRadius: 2, // Set the spread radius of the shadow
+                    blurRadius: 5, // Set the blur radius of the shadow
+                    offset: Offset(0, 3), // Set the offset of the shadow
+                  ),
+                ],
+              ),
+              child: Column(
+                children: <Widget>[
                   Text(
                     '今日の予定', // Add your text here
                     style: TextStyle(
@@ -68,62 +102,40 @@ class _HomePageState extends State<HomePage> {
                     ),
                     textAlign: TextAlign.center,
                   ),
+
                   //一つ一つの予定
                   Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 10),
-                      height: 20,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFFF7575),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Center(
-                        child: Text(
-                          '予定１', // Add your text here
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.normal,
+                    height: 60,
+                    child: ListView.builder(
+                      itemCount: events.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 10),
+                          height: 20,
+                          decoration: BoxDecoration(
+                            color: index % 2 == 0
+                                ? Color(0xFFA9CF58)
+                                : Color(0xFF75CDFF),
+                            borderRadius: BorderRadius.circular(20.0),
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                      )),
-                  Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 10),
-                      height: 20,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFA9CF58),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Center(
-                        child: Text(
-                          '予定２', // Add your text here
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.normal,
+                          child: Center(
+                            child: Text(
+                              events[index]['summary'] ?? '予定${index + 1}',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.normal,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                      )),
-                  Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 10),
-                      height: 20,
-                      decoration: BoxDecoration(
-                        color: Color(0xFF75CDFF),
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Center(
-                        child: Text(
-                          '予定３', // Add your text here
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.normal,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      )),
-                ])),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
             Row(
               children: <Widget>[
                 Expanded(
