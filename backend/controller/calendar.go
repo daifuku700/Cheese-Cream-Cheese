@@ -119,6 +119,7 @@ func Calender(c *gin.Context) {
 			summary := item.Summary
 			category := components.GetCategory(summary)
 			items := components.GetItemList(category)
+			fmt.Printf("%v: %v\n", date, summary)
 			if err != nil {
 				log.Fatal(err)
 			}
