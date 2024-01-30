@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,25 +14,32 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Map<String, String>> events = [];
+  //ここにAPIから取得したデータを収納
+  List<Map<String, dynamic>> events = [];
+  Map<String, dynamic> weather = {};
 
   @override
   void initState() {
     super.initState();
-    fetchData();
+    fetchEventData();
+    fetchWeatherData();
   }
 
-  Future<void> fetchData() async {
-    http.Response response =
+  //スケジュールと持ち物をlocalhostから取得する関数
+  Future<void> fetchEventData() async {
+    final response =
         await http.get(Uri.parse('http://localhost:8080/ccc/calendar'));
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = json.decode(response.body);
       setState(() {
-        events = jsonData.map<Map<String, String>>((event) {
+        events = jsonData.map((event) {
           return {
-            'date': event['date'] as String,
-            'summary': event['summary'] as String,
+            'summary': event['summary'],
+            'date': event['date'],
+            'items': (event['items'] as List)
+                .map((item) => item.cast<String, dynamic>())
+                .toList(),
           };
         }).toList();
       });
@@ -39,10 +48,40 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  //天気と温度をlocalhostから取得する関数
+  Future<void> fetchWeatherData() async {
+    final response =
+        await http.get(Uri.parse('http://localhost:8080/ccc/weather'));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonData = json.decode(response.body);
+      setState(() {
+        weather = {
+          'area': jsonData['area'] ?? '',
+          'temperature_max': jsonData['temperature_max'] ?? '',
+          'temperature_min': jsonData['temperature_min'] ?? '',
+          'text': jsonData['text'] ?? '',
+          'weather_code': jsonData['weather_code'] ?? '',
+        };
+      });
+    } else {
+      throw Exception('Failed to load weather data');
+    }
+  }
+
+  //日にちを表示するための関数
+  String _getFormattedDate() {
+    initializeDateFormatting(); //これおかなきゃエラーでる
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyy年MM月dd日EEEE', 'ja_JP');
+    return formatter.format(now);
+  }
+
   @override
   Widget build(BuildContext context) {
     print("hi");
     print(events);
+    print(weather);
     return Scaffold(
       backgroundColor: Color(0xFFEFF8FF),
       body: Center(
@@ -66,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: Center(
                   child: Text(
-                    'おはよう！\n今日は2024年2月3日土曜日', // Add your text here
+                    'おはよう！\n今日は${_getFormattedDate()}', // Add your text here
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.normal,
@@ -106,31 +145,33 @@ class _HomePageState extends State<HomePage> {
                   //一つ一つの予定
                   Container(
                     height: 60,
-                    child: ListView.builder(
-                      itemCount: events.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 5, horizontal: 10),
-                          height: 20,
-                          decoration: BoxDecoration(
-                            color: index % 2 == 0
-                                ? Color(0xFFA9CF58)
-                                : Color(0xFF75CDFF),
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          child: Center(
-                            child: Text(
-                              events[index]['summary'] ?? '予定${index + 1}',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.normal,
-                              ),
-                              textAlign: TextAlign.center,
+                    child: Scrollbar(
+                      child: ListView.builder(
+                        itemCount: events.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 10),
+                            height: 20,
+                            decoration: BoxDecoration(
+                              color: index % 2 == 0
+                                  ? Color(0xFFA9CF58)
+                                  : Color(0xFF75CDFF),
+                              borderRadius: BorderRadius.circular(20.0),
                             ),
-                          ),
-                        );
-                      },
+                            child: Center(
+                              child: Text(
+                                events[index]['summary'] ?? '予定${index + 1}',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ],
@@ -208,19 +249,36 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   Expanded(
-                    child: ListView(
-                      children: [
-                        ListTile(
-                          title: Text('アイテム1'),
-                        ),
-                        ListTile(
-                          title: Text('アイテム2'),
-                        ),
-                        ListTile(
-                          title: Text('アイテム3'),
-                        ),
-                        // 必要に応じて他のアイテムを追加
-                      ],
+                    child: ListView.builder(
+                      itemCount: events.length,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            ListTile(
+                              title: Text(
+                                  events[index]['summary'] ?? '予定${index + 1}'),
+                              // Other ListTile properties as needed
+                            ),
+                            // Display items for each event
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const ClampingScrollPhysics(),
+                              itemCount: events[index]['items'].length,
+                              itemBuilder: (context, itemIndex) {
+                                final item = events[index]['items'][itemIndex];
+                                return ListTile(
+                                  title: Text(item['name'] ?? ''),
+                                  subtitle: Text(
+                                      'Category: ${item['category'] ?? ''}'),
+                                  // Add other item details as needed
+                                );
+                              },
+                            ),
+                            // Divider between events
+                            const Divider(),
+                          ],
+                        );
+                      },
                     ),
                   ),
                 ],
