@@ -92,13 +92,13 @@ func WeatherGet(c *gin.Context) {
 func httpGetBody(url string) ([]byte, error) {
 	res, err := http.Get(url)
 	if err != nil {
-		err = fmt.Errorf("Get Http Error: %s", err)
+		err = fmt.Errorf("get http error: %s", err)
 		return nil, err
 	}
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		err := fmt.Errorf("IO Read Error: %s", err)
+		err := fmt.Errorf("io read error: %s", err)
 		return nil, err
 	}
 
