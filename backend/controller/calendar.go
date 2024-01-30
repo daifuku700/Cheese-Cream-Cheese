@@ -73,8 +73,8 @@ func saveToken(path string, token *oauth2.Token) {
 }
 
 type Event struct {
-	Summary string `json:"summary"`
-	Date    string `json:"date"`
+	Summary string            `json:"summary"`
+	Date    string            `json:"date"`
 	Items   []components.Item `json:"items"`
 }
 
@@ -119,6 +119,7 @@ func Calender(c *gin.Context) {
 			summary := item.Summary
 			category := components.GetCategory(summary)
 			items := components.GetItemList(category)
+			fmt.Printf("%v: %v\n", date, summary)
 			if err != nil {
 				log.Fatal(err)
 			}
