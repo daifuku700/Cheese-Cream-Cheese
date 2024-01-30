@@ -1,5 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({Key? key});
@@ -9,67 +10,50 @@ class SchedulePage extends StatefulWidget {
 }
 
 class _SchedulePageState extends State<SchedulePage> {
+  List<Map<String, dynamic>> schedules = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchSchedules();
+  }
+
+  Future<void> fetchSchedules() async {
+    final response =
+        await http.get(Uri.parse('http://localhost:8080/ccc/calendar'));
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      setState(() {
+        schedules = data.cast<Map<String, dynamic>>();
+      });
+    } else {
+      throw Exception('Failed to fetch schedules');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Schedule'),
-      ),
-      body: ListView(
-        padding: EdgeInsets.all(8), // Add padding to create space between cards
-        children: [
-          Card(
-            margin: EdgeInsets.symmetric(
-                horizontal: 20), // Add margin to create space between cards
+      // ...
+      body: ListView.builder(
+        itemCount: schedules.length,
+        itemBuilder: (context, index) {
+          final schedule = schedules[index];
+          return Container(
+            // ...
             child: ListTile(
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Date', style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('Schedule: 線形代数講義、バイト、打ち上げ'),
-                  Text('Items to bring: パソコン、ノート、財布'),
+                  Text(schedule['date']),
+                  // ...
                 ],
               ),
-              trailing: IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: () {
-                  // Add your edit button logic here
-                },
-              ),
+              // ...
             ),
-          ),
-          SizedBox(height: 16),
-          Card(
-            margin: EdgeInsets.symmetric(
-                horizontal: 20), // Add margin to create space between cards
-            child: ListTile(
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Date', style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('Schedule'),
-                  Text('Items to bring'),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 16),
-          Card(
-            margin: EdgeInsets.symmetric(
-                horizontal: 20), // Add margin to create space between cards
-            child: ListTile(
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Date', style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('Schedule'),
-                  Text('Items to bring'),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 16),
-        ],
+          );
+        },
       ),
     );
   }
