@@ -13,6 +13,7 @@ func main() {
 	{
 		ccc.GET("/weather", controller.WeatherGet)
 		ccc.POST("/weather", controller.WeatherPost)
+		ccc.GET("/calendar", controller.Calender)
 	}
 
 	router.Run(":8080")

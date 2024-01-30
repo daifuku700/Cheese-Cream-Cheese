@@ -57,7 +57,9 @@ type Weather []struct {
 }
 
 func WeatherPost(c *gin.Context) {
-
+	c.JSON(200, gin.H{
+		"message": "error",
+	})
 }
 
 func WeatherGet(c *gin.Context) {
@@ -72,16 +74,12 @@ func WeatherGet(c *gin.Context) {
 		return
 	}
 
-	area := fmt.Sprintf("%s",(*weather)[0].TimeSeries[0].Areas[0].Area.Name)
-	weather_code := fmt.Sprintf("%s",(*weather)[0].TimeSeries[0].Areas[0].WeatherCodes[0])
-	text := fmt.Sprintf("%s",(*weather)[0].TimeSeries[0].Areas[0].Weathers[0])
-	temperature_min := fmt.Sprintf("%s",(*weather)[0].TimeSeries[2].Areas[0].Temps[0])
-	temperature_max := fmt.Sprintf("%s",(*weather)[0].TimeSeries[2].Areas[0].Temps[1])
-	fmt.Println(area)
-	fmt.Println(weather_code)
-	fmt.Println(text)
-	fmt.Println(temperature_min)
-	fmt.Println(temperature_max)
+	area := (*weather)[0].TimeSeries[0].Areas[0].Area.Name
+	weather_code := (*weather)[0].TimeSeries[0].Areas[0].WeatherCodes[0]
+	text := (*weather)[0].TimeSeries[0].Areas[0].Weathers[0]
+	temperature_min := (*weather)[0].TimeSeries[2].Areas[0].Temps[0]
+	temperature_max := (*weather)[0].TimeSeries[2].Areas[0].Temps[1]
+
 	c.JSON(200, gin.H{
 		"area": area,
 		"weather_code": weather_code,
@@ -94,13 +92,13 @@ func WeatherGet(c *gin.Context) {
 func httpGetBody(url string) ([]byte, error) {
 	res, err := http.Get(url)
 	if err != nil {
-		err = fmt.Errorf("Get Http Error: %s", err)
+		err = fmt.Errorf("get http error: %s", err)
 		return nil, err
 	}
 
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
-		err := fmt.Errorf("IO Read Error: %s", err)
+		err := fmt.Errorf("io read error: %s", err)
 		return nil, err
 	}
 
@@ -112,7 +110,7 @@ func httpGetBody(url string) ([]byte, error) {
 func formatWeather(body []byte) (*Weather, error) {
 	weather := new(Weather)
 	if err := json.Unmarshal(body, weather); err != nil {
-		err := fmt.Errorf("Json Unmarshal Error: %s", err)
+		err := fmt.Errorf("json unmarshal error: %s", err)
 		return nil, err
 	}
 	return weather, nil
