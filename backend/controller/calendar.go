@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"ccc/components"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -21,7 +22,7 @@ func getClient(config *oauth2.Config) *http.Client {
 	// The file token.json stores the user's access and refresh tokens, and is
 	// created automatically when the authorization flow completes for the first
 	// time.
-	tokFile := "token.json"
+	tokFile := "api/token.json"
 	tok, err := tokenFromFile(tokFile)
 	if err != nil {
 		tok = getTokenFromWeb(config)
@@ -71,9 +72,15 @@ func saveToken(path string, token *oauth2.Token) {
 	json.NewEncoder(f).Encode(token)
 }
 
+type Event struct {
+	Summary string `json:"summary"`
+	Date    string `json:"date"`
+	Items   []components.Item `json:"items"`
+}
+
 func Calender(c *gin.Context) {
 	ctx := context.Background()
-	b, err := os.ReadFile("credentials.json")
+	b, err := os.ReadFile("api/credentials.json")
 	if err != nil {
 		log.Fatalf("Unable to read client secret file: %v", err)
 	}
@@ -103,18 +110,24 @@ func Calender(c *gin.Context) {
 			"message": "No upcoming events found.",
 		})
 	} else {
-		var eventList []map[string]interface{}
+		var eventList []Event
 		for _, item := range events.Items {
 			date := item.Start.DateTime
 			if date == "" {
 				date = item.Start.Date
 			}
-			event := map[string]interface{}{
-				"summary": item.Summary,
-				"date":    date,
+			summary := item.Summary
+			category := components.GetCategory(summary)
+			items := components.GetItemList(category)
+			if err != nil {
+				log.Fatal(err)
+			}
+			event := Event{
+				Summary: summary,
+				Date:    date,
+				Items:   items,
 			}
 			eventList = append(eventList, event)
-			fmt.Printf("%v (%v)\n", item.Summary, date)
 		}
 		c.JSON(200, eventList)
 	}
