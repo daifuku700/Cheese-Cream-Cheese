@@ -7,13 +7,6 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-type Item struct {
-	ID       int    `json:"id"`
-	Category string `json:"category"`
-	Name     string `json:"name"`
-	Weight   int    `json:"weight"`
-}
-
 func GetItemList(category string) []Item {
 	db, err := sql.Open("sqlite3", "db/ccc.db")
 	if err != nil {
