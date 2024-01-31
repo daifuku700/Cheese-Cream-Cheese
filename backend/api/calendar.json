@@ -1,0 +1,800 @@
+[
+  {
+    "summary": "授業",
+    "date": "2024-01-31",
+    "items": [
+      {
+        "id": 6,
+        "category": "trip",
+        "name": "Suica",
+        "weight": 5
+      },
+      {
+        "id": 9,
+        "category": "trip",
+        "name": "カメラ",
+        "weight": 5
+      },
+      {
+        "id": 10,
+        "category": "trip",
+        "name": "パスポート",
+        "weight": 5
+      },
+      {
+        "id": 1,
+        "category": "class",
+        "name": "パソコン",
+        "weight": 3
+      },
+      {
+        "id": 2,
+        "category": "exam",
+        "name": "電卓",
+        "weight": 3
+      },
+      {
+        "id": 3,
+        "category": "party",
+        "name": "財布",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "summary": "旅行",
+    "date": "2024-01-31",
+    "items": [
+      {
+        "id": 6,
+        "category": "trip",
+        "name": "Suica",
+        "weight": 5
+      },
+      {
+        "id": 9,
+        "category": "trip",
+        "name": "カメラ",
+        "weight": 5
+      },
+      {
+        "id": 10,
+        "category": "trip",
+        "name": "パスポート",
+        "weight": 5
+      },
+      {
+        "id": 1,
+        "category": "class",
+        "name": "パソコン",
+        "weight": 3
+      },
+      {
+        "id": 2,
+        "category": "exam",
+        "name": "電卓",
+        "weight": 3
+      },
+      {
+        "id": 3,
+        "category": "party",
+        "name": "財布",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "summary": "授業",
+    "date": "2024-02-01",
+    "items": [
+      {
+        "id": 8,
+        "category": "job",
+        "name": "制服",
+        "weight": 5
+      },
+      {
+        "id": 13,
+        "category": "job",
+        "name": "腕時計",
+        "weight": 5
+      },
+      {
+        "id": 1,
+        "category": "class",
+        "name": "パソコン",
+        "weight": 3
+      },
+      {
+        "id": 2,
+        "category": "exam",
+        "name": "電卓",
+        "weight": 3
+      },
+      {
+        "id": 3,
+        "category": "party",
+        "name": "財布",
+        "weight": 3
+      },
+      {
+        "id": 4,
+        "category": "class",
+        "name": "ノート",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "summary": "バイト",
+    "date": "2024-02-01",
+    "items": [
+      {
+        "id": 8,
+        "category": "job",
+        "name": "制服",
+        "weight": 5
+      },
+      {
+        "id": 13,
+        "category": "job",
+        "name": "腕時計",
+        "weight": 5
+      },
+      {
+        "id": 1,
+        "category": "class",
+        "name": "パソコン",
+        "weight": 3
+      },
+      {
+        "id": 2,
+        "category": "exam",
+        "name": "電卓",
+        "weight": 3
+      },
+      {
+        "id": 3,
+        "category": "party",
+        "name": "財布",
+        "weight": 3
+      },
+      {
+        "id": 4,
+        "category": "class",
+        "name": "ノート",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "summary": "打ち上げ",
+    "date": "2024-02-02",
+    "items": [
+      {
+        "id": 2,
+        "category": "exam",
+        "name": "電卓",
+        "weight": 5
+      },
+      {
+        "id": 3,
+        "category": "party",
+        "name": "財布",
+        "weight": 5
+      },
+      {
+        "id": 5,
+        "category": "exam",
+        "name": "学生証",
+        "weight": 5
+      },
+      {
+        "id": 1,
+        "category": "class",
+        "name": "パソコン",
+        "weight": 3
+      },
+      {
+        "id": 4,
+        "category": "class",
+        "name": "ノート",
+        "weight": 3
+      },
+      {
+        "id": 6,
+        "category": "trip",
+        "name": "Suica",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "summary": "試験",
+    "date": "2024-02-02",
+    "items": [
+      {
+        "id": 2,
+        "category": "exam",
+        "name": "電卓",
+        "weight": 5
+      },
+      {
+        "id": 3,
+        "category": "party",
+        "name": "財布",
+        "weight": 5
+      },
+      {
+        "id": 5,
+        "category": "exam",
+        "name": "学生証",
+        "weight": 5
+      },
+      {
+        "id": 1,
+        "category": "class",
+        "name": "パソコン",
+        "weight": 3
+      },
+      {
+        "id": 4,
+        "category": "class",
+        "name": "ノート",
+        "weight": 3
+      },
+      {
+        "id": 6,
+        "category": "trip",
+        "name": "Suica",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "summary": "授業",
+    "date": "2024-02-02",
+    "items": [
+      {
+        "id": 2,
+        "category": "exam",
+        "name": "電卓",
+        "weight": 5
+      },
+      {
+        "id": 3,
+        "category": "party",
+        "name": "財布",
+        "weight": 5
+      },
+      {
+        "id": 5,
+        "category": "exam",
+        "name": "学生証",
+        "weight": 5
+      },
+      {
+        "id": 1,
+        "category": "class",
+        "name": "パソコン",
+        "weight": 3
+      },
+      {
+        "id": 4,
+        "category": "class",
+        "name": "ノート",
+        "weight": 3
+      },
+      {
+        "id": 6,
+        "category": "trip",
+        "name": "Suica",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "summary": "バイト",
+    "date": "2024-02-03",
+    "items": [
+      {
+        "id": 8,
+        "category": "job",
+        "name": "制服",
+        "weight": 5
+      },
+      {
+        "id": 13,
+        "category": "job",
+        "name": "腕時計",
+        "weight": 5
+      },
+      {
+        "id": 1,
+        "category": "class",
+        "name": "パソコン",
+        "weight": 3
+      },
+      {
+        "id": 2,
+        "category": "exam",
+        "name": "電卓",
+        "weight": 3
+      },
+      {
+        "id": 3,
+        "category": "party",
+        "name": "財布",
+        "weight": 3
+      },
+      {
+        "id": 4,
+        "category": "class",
+        "name": "ノート",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "summary": "バイト",
+    "date": "2024-02-04",
+    "items": [
+      {
+        "id": 3,
+        "category": "party",
+        "name": "財布",
+        "weight": 5
+      },
+      {
+        "id": 8,
+        "category": "job",
+        "name": "制服",
+        "weight": 5
+      },
+      {
+        "id": 13,
+        "category": "job",
+        "name": "腕時計",
+        "weight": 5
+      },
+      {
+        "id": 1,
+        "category": "class",
+        "name": "パソコン",
+        "weight": 3
+      },
+      {
+        "id": 2,
+        "category": "exam",
+        "name": "電卓",
+        "weight": 3
+      },
+      {
+        "id": 4,
+        "category": "class",
+        "name": "ノート",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "summary": "飲み会",
+    "date": "2024-02-04",
+    "items": [
+      {
+        "id": 3,
+        "category": "party",
+        "name": "財布",
+        "weight": 5
+      },
+      {
+        "id": 8,
+        "category": "job",
+        "name": "制服",
+        "weight": 5
+      },
+      {
+        "id": 13,
+        "category": "job",
+        "name": "腕時計",
+        "weight": 5
+      },
+      {
+        "id": 1,
+        "category": "class",
+        "name": "パソコン",
+        "weight": 3
+      },
+      {
+        "id": 2,
+        "category": "exam",
+        "name": "電卓",
+        "weight": 3
+      },
+      {
+        "id": 4,
+        "category": "class",
+        "name": "ノート",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "summary": "MTG",
+    "date": "2024-02-05",
+    "items": [
+      {
+        "id": 8,
+        "category": "job",
+        "name": "制服",
+        "weight": 5
+      },
+      {
+        "id": 13,
+        "category": "job",
+        "name": "腕時計",
+        "weight": 5
+      },
+      {
+        "id": 1,
+        "category": "class",
+        "name": "パソコン",
+        "weight": 3
+      },
+      {
+        "id": 2,
+        "category": "exam",
+        "name": "電卓",
+        "weight": 3
+      },
+      {
+        "id": 3,
+        "category": "party",
+        "name": "財布",
+        "weight": 3
+      },
+      {
+        "id": 4,
+        "category": "class",
+        "name": "ノート",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "summary": "バイト",
+    "date": "2024-02-05",
+    "items": [
+      {
+        "id": 8,
+        "category": "job",
+        "name": "制服",
+        "weight": 5
+      },
+      {
+        "id": 13,
+        "category": "job",
+        "name": "腕時計",
+        "weight": 5
+      },
+      {
+        "id": 1,
+        "category": "class",
+        "name": "パソコン",
+        "weight": 3
+      },
+      {
+        "id": 2,
+        "category": "exam",
+        "name": "電卓",
+        "weight": 3
+      },
+      {
+        "id": 3,
+        "category": "party",
+        "name": "財布",
+        "weight": 3
+      },
+      {
+        "id": 4,
+        "category": "class",
+        "name": "ノート",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "summary": "授業",
+    "date": "2024-02-06",
+    "items": [
+      {
+        "id": 8,
+        "category": "job",
+        "name": "制服",
+        "weight": 5
+      },
+      {
+        "id": 13,
+        "category": "job",
+        "name": "腕時計",
+        "weight": 5
+      },
+      {
+        "id": 1,
+        "category": "class",
+        "name": "パソコン",
+        "weight": 3
+      },
+      {
+        "id": 2,
+        "category": "exam",
+        "name": "電卓",
+        "weight": 3
+      },
+      {
+        "id": 3,
+        "category": "party",
+        "name": "財布",
+        "weight": 3
+      },
+      {
+        "id": 4,
+        "category": "class",
+        "name": "ノート",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "summary": "バイト",
+    "date": "2024-02-06",
+    "items": [
+      {
+        "id": 8,
+        "category": "job",
+        "name": "制服",
+        "weight": 5
+      },
+      {
+        "id": 13,
+        "category": "job",
+        "name": "腕時計",
+        "weight": 5
+      },
+      {
+        "id": 1,
+        "category": "class",
+        "name": "パソコン",
+        "weight": 3
+      },
+      {
+        "id": 2,
+        "category": "exam",
+        "name": "電卓",
+        "weight": 3
+      },
+      {
+        "id": 3,
+        "category": "party",
+        "name": "財布",
+        "weight": 3
+      },
+      {
+        "id": 4,
+        "category": "class",
+        "name": "ノート",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "summary": "授業",
+    "date": "2024-02-07",
+    "items": [
+      {
+        "id": 8,
+        "category": "job",
+        "name": "制服",
+        "weight": 5
+      },
+      {
+        "id": 13,
+        "category": "job",
+        "name": "腕時計",
+        "weight": 5
+      },
+      {
+        "id": 1,
+        "category": "class",
+        "name": "パソコン",
+        "weight": 3
+      },
+      {
+        "id": 2,
+        "category": "exam",
+        "name": "電卓",
+        "weight": 3
+      },
+      {
+        "id": 3,
+        "category": "party",
+        "name": "財布",
+        "weight": 3
+      },
+      {
+        "id": 4,
+        "category": "class",
+        "name": "ノート",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "summary": "バイト",
+    "date": "2024-02-07",
+    "items": [
+      {
+        "id": 8,
+        "category": "job",
+        "name": "制服",
+        "weight": 5
+      },
+      {
+        "id": 13,
+        "category": "job",
+        "name": "腕時計",
+        "weight": 5
+      },
+      {
+        "id": 1,
+        "category": "class",
+        "name": "パソコン",
+        "weight": 3
+      },
+      {
+        "id": 2,
+        "category": "exam",
+        "name": "電卓",
+        "weight": 3
+      },
+      {
+        "id": 3,
+        "category": "party",
+        "name": "財布",
+        "weight": 3
+      },
+      {
+        "id": 4,
+        "category": "class",
+        "name": "ノート",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "summary": "授業",
+    "date": "2024-02-08",
+    "items": [
+      {
+        "id": 1,
+        "category": "class",
+        "name": "パソコン",
+        "weight": 3
+      },
+      {
+        "id": 2,
+        "category": "exam",
+        "name": "電卓",
+        "weight": 3
+      },
+      {
+        "id": 3,
+        "category": "party",
+        "name": "財布",
+        "weight": 3
+      },
+      {
+        "id": 4,
+        "category": "class",
+        "name": "ノート",
+        "weight": 3
+      },
+      {
+        "id": 5,
+        "category": "exam",
+        "name": "学生証",
+        "weight": 3
+      },
+      {
+        "id": 6,
+        "category": "trip",
+        "name": "Suica",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "summary": "旅行",
+    "date": "2024-02-09",
+    "items": [
+      {
+        "id": 6,
+        "category": "trip",
+        "name": "Suica",
+        "weight": 5
+      },
+      {
+        "id": 9,
+        "category": "trip",
+        "name": "カメラ",
+        "weight": 5
+      },
+      {
+        "id": 10,
+        "category": "trip",
+        "name": "パスポート",
+        "weight": 5
+      },
+      {
+        "id": 1,
+        "category": "class",
+        "name": "パソコン",
+        "weight": 3
+      },
+      {
+        "id": 2,
+        "category": "exam",
+        "name": "電卓",
+        "weight": 3
+      },
+      {
+        "id": 3,
+        "category": "party",
+        "name": "財布",
+        "weight": 3
+      }
+    ]
+  },
+  {
+    "summary": "旅行",
+    "date": "2024-02-10",
+    "items": [
+      {
+        "id": 6,
+        "category": "trip",
+        "name": "Suica",
+        "weight": 5
+      },
+      {
+        "id": 9,
+        "category": "trip",
+        "name": "カメラ",
+        "weight": 5
+      },
+      {
+        "id": 10,
+        "category": "trip",
+        "name": "パスポート",
+        "weight": 5
+      },
+      {
+        "id": 1,
+        "category": "class",
+        "name": "パソコン",
+        "weight": 3
+      },
+      {
+        "id": 2,
+        "category": "exam",
+        "name": "電卓",
+        "weight": 3
+      },
+      {
+        "id": 3,
+        "category": "party",
+        "name": "財布",
+        "weight": 3
+      }
+    ]
+  }
+]

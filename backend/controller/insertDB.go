@@ -12,6 +12,8 @@ import (
 )
 
 func InsertDB(c *gin.Context) {
+	components.CheckItems()
+
 	db, err := sql.Open("sqlite3", "db/ccc.db")
 	if err != nil {
 		log.Fatal(err)
