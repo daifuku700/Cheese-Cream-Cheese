@@ -15,6 +15,7 @@ class SchedulePage extends StatefulWidget {
 
 class _SchedulePageState extends State<SchedulePage> {
   List<Map<String, String>> events = [];
+  Map<String, List<Map<String, dynamic>>> items = {};
 
   @override
   void initState() {
@@ -50,6 +51,26 @@ class _SchedulePageState extends State<SchedulePage> {
     List<DateTime> next7Days =
         List.generate(7, (index) => today.add(Duration(days: index)));
 
+    // eventsを日付ごとにグループ化
+    Map<String, List<Map<String, String>>> groupedEvents = {};
+    for (var event in events) {
+      if (!groupedEvents.containsKey(event['date'])) {
+        groupedEvents[event['date']!] = [event];
+      } else {
+        groupedEvents[event['date']]?.add(event);
+      }
+    }
+
+    Map<String, List<Map<String, dynamic>>> groupedItems = {};
+    List<Map<String, dynamic>> items = [];
+    for (var item in items) {
+      if (!groupedItems.containsKey(item['date'])) {
+        groupedItems[item['date']] = item['items'];
+      } else {
+        groupedItems[item['date']]?.addAll(item['items']);
+      }
+    }
+
     return Scaffold(
       backgroundColor: Color(0xFFEFF8FF),
       body: SingleChildScrollView(
@@ -60,8 +81,11 @@ class _SchedulePageState extends State<SchedulePage> {
               physics: NeverScrollableScrollPhysics(),
               itemCount: next7Days.length,
               itemBuilder: (context, index) {
-                if (index < events.length) {
-                  var date = next7Days[index];
+                var date = next7Days[index];
+                var dateString = DateFormat('yyyy-MM-dd').format(date);
+                if (groupedEvents.containsKey(dateString)) {
+                  var eventsOnDate = groupedEvents[dateString];
+                  var itemsOnDate = groupedItems[dateString];
                   return Container(
                     margin: EdgeInsets.symmetric(
                         horizontal: 20, vertical: 10), // Added vertical margin
@@ -81,12 +105,14 @@ class _SchedulePageState extends State<SchedulePage> {
                       title: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(events[index]['date'] ?? '',
+                          Text(dateString,
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold)),
-                          Text(events[index]['summary'] ?? '',
-                              style: TextStyle(fontSize: 16)),
+                          for (var event in eventsOnDate!)
+                            Text(event['summary'] ?? '',
+                                style: TextStyle(fontSize: 16)),
                           Text('Items to bring: パソコン、ノート、財布'),
+                          Text('Items to bring:'),
                         ],
                       ),
                       trailing: IconButton(
