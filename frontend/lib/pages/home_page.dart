@@ -335,6 +335,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Expanded(
+                      flex: 1,
                       // イベントを全て探索
                       child: ListView.builder(
                         itemCount: events.length,
