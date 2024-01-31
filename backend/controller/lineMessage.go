@@ -1,15 +1,22 @@
 package controller
 
 import (
+	"ccc/components"
 	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/line/line-bot-sdk-go/v8/linebot"
+
+	"time"
 )
 
 func Line(c *gin.Context) {
+	t := time.Now()
+
+	date := t.Format("2006-01-02")
+
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -30,10 +37,18 @@ func Line(c *gin.Context) {
 
 	var msg string
 	if temp_max == "" {
-		msg = "こんにちは！\nこの後の" + area + "の天気は" + text + "です。\n今夜の最低気温は" + temp_min_tomorrow + "℃です。\n明日の最高気温は" + temp_max_tomorrow + "℃です。"
+		msg = "こんにちは😊\nチーズクリームチーズ🧀です。\n\nこの後の" + area + "の天気：" + text + "\n今夜の最低気温：" + temp_min_tomorrow + "℃⭐\n明日の最高気温：" + temp_max_tomorrow + "℃☀️\n\n今日持っていくべき持ち物は"
 	} else {
-		msg = "おはようございます！\nこの後の" + area + "の天気は" + text + "です。\n今日の最高気温は" + temp_max + "℃です。"
+		msg = "おはようございます😊\nチーズクリームチーズ🧀です。\n\nこの後の" + area + "の天気：" + text + "\n今日の最高気温：" + temp_max + "℃☀️\n\n今日持っていくべき持ち物💼は"
 	}
+
+	items := components.GetCalendarDB(date)
+
+	for i := 0; i < len(items); i++ {
+		msg +=  "\n・ " + items[i]
+	}
+
+	msg += "\nです。\n\n今日も一日頑張りましょう！😊"
 
 	message := linebot.NewTextMessage(msg)
 
