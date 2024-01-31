@@ -137,7 +137,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     displayed = false;
     return Scaffold(
-      backgroundColor: Color(0xFFEFF8FF),
+      backgroundColor: const Color(0xFFEFF8FF),
       body: Center(
         child: Column(
           children: <Widget>[
@@ -154,14 +154,15 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.grey.withOpacity(0.5), // Set shadow color
                         spreadRadius: 2, // Set the spread radius of the shadow
                         blurRadius: 5, // Set the blur radius of the shadow
-                        offset: Offset(0, 3), // Set the offset of the shadow
+                        offset:
+                            const Offset(0, 3), // Set the offset of the shadow
                       ),
                     ],
                   ),
                   child: Center(
                     child: Text(
                       'おはよう！\n今日は${_getFormattedDate()}', // Add your text here
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.normal,
                       ),
@@ -190,7 +191,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: Column(
                   children: <Widget>[
-                    Text(
+                    const Text(
                       '今日の予定', // Add your text here
                       style: TextStyle(
                         fontSize: 20,
@@ -226,7 +227,7 @@ class _HomePageState extends State<HomePage> {
                                   child: Text(
                                     events[index]['summary'] ??
                                         '予定${index + 1}',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.normal,
                                     ),
@@ -270,7 +271,7 @@ class _HomePageState extends State<HomePage> {
                             color: Colors.grey.withOpacity(0.5),
                             spreadRadius: 2,
                             blurRadius: 5,
-                            offset: Offset(0, 3),
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
@@ -314,14 +315,14 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.grey.withOpacity(0.5),
                       spreadRadius: 2,
                       blurRadius: 5,
-                      offset: Offset(0, 3),
+                      offset: const Offset(0, 3),
                     ),
                   ],
                 ),
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Text(
                         'これ持った？',
                         style: TextStyle(
@@ -344,7 +345,7 @@ class _HomePageState extends State<HomePage> {
                                 // イベントのアイテムを出力する
                                 GridView.builder(
                                   gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2,
                                     mainAxisSpacing:
                                         5.0, // Adjust main axis spacing
@@ -365,7 +366,7 @@ class _HomePageState extends State<HomePage> {
                                       color: Colors.white,
                                       child: Text(
                                         item['name'] ?? '',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.normal,
                                         ),
@@ -388,7 +389,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Container(
               margin: const EdgeInsets.only(bottom: 30),
-              child: Text(
+              child: const Text(
                 'いってらっしゃい！',
               ),
             )
