@@ -357,7 +357,6 @@ class _HomePageState extends State<HomePage> {
                                   itemBuilder: (context, itemIndex) {
                                     final item =
                                         events[index]['items'][itemIndex];
-
                                     return Container(
                                       margin: const EdgeInsets.symmetric(
                                           horizontal: 15),

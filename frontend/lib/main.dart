@@ -66,6 +66,7 @@ class _MainPageState extends State<MainPage> {
         color: Colors.black,
         backgroundColor: Color(0xFFEFF8FF),
         index: index,
+        animationDuration: const Duration(milliseconds: 800),
         onTap: (index) => setState(() => this.index = index),
         items: [
           Icon(
