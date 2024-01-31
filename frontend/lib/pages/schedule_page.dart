@@ -70,6 +70,25 @@ class _SchedulePageState extends State<SchedulePage> {
         groupedItems[item['date']]?.addAll(item['items']);
       }
     }
+    //カテゴリーごとに適切な色を取得するための関数
+    Color _getColorForSummary(String summary) {
+      switch (summary) {
+        case "授業":
+          return Color(0xFF4CAF50); // Green
+        case "バイト":
+          return Color(0xFFFFC107); // Yellow
+        case "打ち上げ":
+          return Color(0xFFE91E63); // Pink
+        case "試験":
+          return Color(0xFF2196F3); // Blue
+        case "飲み会":
+          return Color(0xFFFF5722); // Orange
+        case "MTG":
+          return Color(0xFF9C27B0); // Purple
+        default:
+          return Colors.grey; // Default color for unknown summary
+      }
+    }
 
     return Scaffold(
       backgroundColor: Color(0xFFEFF8FF),
@@ -109,10 +128,90 @@ class _SchedulePageState extends State<SchedulePage> {
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold)),
                           for (var event in eventsOnDate!)
-                            Text(event['summary'] ?? '',
-                                style: TextStyle(fontSize: 16)),
-                          Text('Items to bring: パソコン、ノート、財布'),
-                          Text('Items to bring:'),
+                            Container(
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 10),
+                              height: 20,
+                              decoration: BoxDecoration(
+                                color:
+                                    _getColorForSummary(event['summary'] ?? ''),
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  event['summary'] ?? '予定${index + 1}',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          //持ち物を表示
+                          Center(
+                            child: Text(
+                              '持ち物', // Add your text here
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.normal,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+
+                          // Expanded(
+                          //   // イベントを全て探索
+                          //   child: ListView.builder(
+                          //     itemCount: events.length,
+                          //     itemBuilder: (context, index) {
+                          //       // 今日の日付のイベント＆まだ一回も出力してない場合のみアイテムを出力
+                          //       if (dateString == events[index]['date'] && events[index]['items'] != null) {
+                          //         return Column(
+                          //           children: [
+                          //             // イベントのアイテムを出力する
+                          //             GridView.builder(
+                          //               gridDelegate:
+                          //                   SliverGridDelegateWithFixedCrossAxisCount(
+                          //                 crossAxisCount: 2,
+                          //                 mainAxisSpacing:
+                          //                     5.0, // Adjust main axis spacing
+                          //                 crossAxisSpacing:
+                          //                     5.0, // Adjust cross axis spacing
+                          //               ),
+                          //               shrinkWrap: true,
+                          //               physics: const ClampingScrollPhysics(),
+                          //               itemCount:
+                          //                   events[index]['items']!.length,
+                          //               itemBuilder: (context, itemIndex) {
+                          //                 final item =
+                          //                     events[index]['items']![itemIndex];
+
+                          //                 return Container(
+                          //                   margin: const EdgeInsets.symmetric(
+                          //                       horizontal: 15),
+                          //                   height: 5,
+                          //                   width: 5,
+                          //                   color: Colors.white,
+                          //                   child: Text(
+                          //                     item['name'].toString() ?? '',
+                          //                     style: TextStyle(
+                          //                       fontSize: 20,
+                          //                       fontWeight: FontWeight.normal,
+                          //                     ),
+                          //                     textAlign: TextAlign.center,
+                          //                   ),
+                          //                 );
+                          //               },
+                          //             ),
+                          //           ],
+                          //         );
+                          //       } else {
+                          //         return Container(); // Return an empty container for events not matching today's date
+                          //       }
+                          //     },
+                          //   ),
+                          // ),
                         ],
                       ),
                       trailing: IconButton(
