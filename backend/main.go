@@ -18,6 +18,7 @@ func main() {
 		ccc.POST("/insertDB", controller.InsertDB)
 		ccc.POST("/updateDB", controller.UpdateDB)
 		ccc.DELETE("/deleteDB", controller.DeleteDB)
+		ccc.GET("/line", controller.Line)
 	}
 
 	router.Run(":8080")
