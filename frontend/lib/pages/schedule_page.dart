@@ -16,11 +16,19 @@ class SchedulePage extends StatefulWidget {
 class _SchedulePageState extends State<SchedulePage> {
   List<Map<String, String>> events = [];
   Map<String, List<Map<String, dynamic>>> items = {};
+  late TextEditingController controller;
 
   @override
   void initState() {
     super.initState();
     fetchData();
+    controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   Future<void> fetchData() async {
@@ -70,6 +78,10 @@ class _SchedulePageState extends State<SchedulePage> {
         groupedItems[item['date']]?.addAll(item['items']);
       }
     }
+
+    //controllerをinitializeしなきゃ何故かバグるからここでやっとく
+    controller = TextEditingController();
+
     //カテゴリーごとに適切な色を取得するための関数
     Color _getColorForSummary(String summary) {
       switch (summary) {
@@ -89,6 +101,61 @@ class _SchedulePageState extends State<SchedulePage> {
           return Colors.grey; // Default color for unknown summary
       }
     }
+
+    //持ち物追加する時の関数
+    Future<void> addItem(String name) async {
+      final String url = 'http://localhost:8080/ccc/insertDB';
+
+      // Example payload for the request
+      final Map<String, dynamic> payload = {
+        "category": 'exam',
+        "name": name,
+        "weight": -1,
+      };
+
+      try {
+        final response = await http.post(
+          Uri.parse(url),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode(payload),
+        );
+
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          // Consider checking for other success status codes if applicable
+          print('Item added successfully');
+        } else {
+          print('Failed to add item. Status code: ${response.statusCode}');
+          print('Response body: ${response.body}');
+          // You might want to log the response body for additional information
+          throw Exception('Failed to add item.');
+        }
+      } catch (error) {
+        print('Error adding item: $error');
+        // Handle any other errors
+      }
+    }
+
+    void add() {
+      Navigator.of(context).pop(controller.text);
+      controller.clear();
+    }
+
+    //持ち物追加のポップアップ
+    Future<String?> openDialog() => showDialog<String>(
+          context: context,
+          builder: (context) => AlertDialog(
+              title: Text('hey'),
+              content: TextField(
+                decoration: InputDecoration(),
+                controller: controller,
+                onSubmitted: (_) => add,
+              ),
+              actions: [
+                TextButton(onPressed: add, child: Text('Submit')),
+              ]),
+        );
 
     return Scaffold(
       backgroundColor: Color(0xFFEFF8FF),
@@ -215,9 +282,11 @@ class _SchedulePageState extends State<SchedulePage> {
                         ],
                       ),
                       trailing: IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () {
-                          // Add your edit button logic here
+                        icon: Icon(Icons.add),
+                        onPressed: () async {
+                          final add = await openDialog();
+                          if (add == null || add.isEmpty) return;
+                          addItem(add);
                         },
                       ),
                     ),
