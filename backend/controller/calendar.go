@@ -140,7 +140,7 @@ func Calender(c *gin.Context) {
 			if val, ok := usedItem[date]; ok {
 				items = val
 			} else {
-				items = components.GetItemList(mp[date])
+				items = components.GetItemList(date, mp[date])
 			}
 
 			usedItem[date] = items
