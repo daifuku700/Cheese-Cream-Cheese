@@ -21,3 +21,11 @@ func GetCategory(summary string) string {
 		return "other"
 	}
 }
+
+func IncludeCategory(caterogy string) bool {
+	if caterogy == "class" || caterogy == "exam" || caterogy == "party" || caterogy == "trip" || caterogy == "job" || caterogy == "mtg" || caterogy == "other" {
+		return true
+	} else {
+		return false
+	}
+}
