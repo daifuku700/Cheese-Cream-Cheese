@@ -335,7 +335,6 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Expanded(
-                      flex: 1,
                       // イベントを全て探索
                       child: ListView.builder(
                         itemCount: events.length,
@@ -367,7 +366,7 @@ class _HomePageState extends State<HomePage> {
                                           horizontal: 15),
                                       height: 5,
                                       width: 5,
-                                      color: Colors.green,
+                                      color: Colors.white,
                                       child: Text(
                                         item['name'] ?? '',
                                         style: TextStyle(
