@@ -62,7 +62,7 @@ class _MainPageState extends State<MainPage> {
       //下のナビゲーションバー
       bottomNavigationBar: CurvedNavigationBar(
         color: Colors.black,
-        backgroundColor: Colors.white,
+        backgroundColor: Color(0xFFEFF8FF),
         index: index,
         onTap: (index) => setState(() => this.index = index),
         items: [
