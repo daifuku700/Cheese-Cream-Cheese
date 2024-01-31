@@ -103,7 +103,6 @@ func Calender(c *gin.Context) {
 	if err != nil {
 		log.Fatalf("Unable to retrieve next ten of the user's events: %v", err)
 	}
-	fmt.Println("Upcoming events:")
 	if len(events.Items) == 0 {
 		fmt.Println("No upcoming events found.")
 		c.JSON(200, gin.H{
@@ -144,7 +143,6 @@ func Calender(c *gin.Context) {
 			}
 
 			usedItem[date] = items
-			fmt.Printf("%v: %v\n", date, summary)
 			if err != nil {
 				log.Fatal(err)
 			}
