@@ -135,9 +135,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    print("hi");
-    print(events);
-    print(weather);
     displayed = false;
     return Scaffold(
       backgroundColor: Color(0xFFEFF8FF),
