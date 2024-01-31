@@ -23,15 +23,13 @@ func UpdateDB(c *gin.Context) {
 		return
 	}
 
-	// Check if a row with the same id as item.ID exists in the database
-	var count int
-	err = db.QueryRow("SELECT COUNT(*) FROM Items WHERE id = $1", item.ID).Scan(&count)
+	var exist bool
+	err = db.QueryRow("SELECT EXISTS(SELECT * FROM Items WHERE id = $1)", item.ID).Scan(&exist)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Use the count variable to determine if the row exists or not
-	if count == 0 {
+	if !exist {
 		c.JSON(400, gin.H{
 			"message": "No such item",
 		})
@@ -71,6 +69,6 @@ func UpdateDB(c *gin.Context) {
 		log.Fatal(err)
 	}
 	c.JSON(200, gin.H{
-		"message": "update DB",
+		"message": "updated item",
 	})
 }
