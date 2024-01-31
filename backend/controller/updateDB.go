@@ -9,7 +9,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func ChangeWeight(c *gin.Context) {
+func UpdateDB(c *gin.Context) {
 	db, err := sql.Open("sqlite3", "db/ccc.db")
 	if err != nil {
 		log.Fatal(err)
@@ -38,12 +38,37 @@ func ChangeWeight(c *gin.Context) {
 		return
 	}
 
-	if item.Weight >= 0 {
-		cmd := "UPDATE Items SET weight = $1 WHERE id = $2"
-		_, err = db.Exec(cmd, item.Weight, item.ID)
-		if err != nil {
-			log.Fatal(err)
+	cmd := "SELECT id, category, name, weight FROM Items Where id = $1"
+	row := db.QueryRow(cmd, item.ID)
+	var id int
+	var category string
+	var name string
+	var weight int
+	err = row.Scan(&id, &category, &name, &weight)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if item.Category != "" {
+		if !components.IncludeCategory(item.Category) {
+			c.JSON(400, gin.H{
+				"message": "category must be class, exam, party, trip, job, mtg or other",
+			})
+			return
 		}
+		category = item.Category
+	}
+	if item.Name != "" {
+		name = item.Name
+	}
+	if item.Weight >= 0 {
+		weight = item.Weight
+	}
+
+	cmd = "UPDATE Items SET category = $1, name = $2, weight = $3 WHERE id = $4"
+	_, err = db.Exec(cmd, category, name, weight, id)
+	if err != nil {
+		log.Fatal(err)
 	}
 	c.JSON(200, gin.H{
 		"message": "update DB",
