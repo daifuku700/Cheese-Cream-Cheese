@@ -16,7 +16,7 @@ func main() {
 		ccc.GET("/calendar", controller.Calender)
 		ccc.GET("/logout", controller.Logout)
 		ccc.POST("/insertDB", controller.InsertDB)
-		ccc.POST("/changeWeight", controller.ChangeWeight)
+		ccc.POST("/updateDB", controller.UpdateDB)
 	}
 
 	router.Run(":8080")
