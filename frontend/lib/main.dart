@@ -47,11 +47,13 @@ class _MainPageState extends State<MainPage> {
       //上のバー
       appBar: AppBar(
         backgroundColor: Color(0xFFEFF8FF),
+        centerTitle: false,
         title: Text(
           display[index],
           textAlign: TextAlign.left,
           style: TextStyle(
             fontWeight: FontWeight.bold,
+            fontSize: 30,
           ),
         ),
       ),
