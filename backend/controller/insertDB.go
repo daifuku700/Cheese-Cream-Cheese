@@ -53,6 +53,6 @@ func InsertDB(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{
-		"message": "update DB",
+		"message": "inserted item",
 	})
 }

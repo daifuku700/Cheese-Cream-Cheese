@@ -17,6 +17,7 @@ func main() {
 		ccc.GET("/logout", controller.Logout)
 		ccc.POST("/insertDB", controller.InsertDB)
 		ccc.POST("/updateDB", controller.UpdateDB)
+		ccc.DELETE("/deleteDB", controller.DeleteDB)
 	}
 
 	router.Run(":8080")

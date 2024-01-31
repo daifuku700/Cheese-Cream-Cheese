@@ -1,9 +1,9 @@
-POST http://localhost:8080/ccc/updateDB HTTP/1.1
+DELETE http://localhost:8080/ccc/deleteDB HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 
 {
-    "id": 7,
+    "id": 8,
     "weight": 3,
     "category": "exam",
     "name": "時計"
