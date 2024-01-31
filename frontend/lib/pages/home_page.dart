@@ -17,7 +17,9 @@ class _HomePageState extends State<HomePage> {
   //ここにAPIから取得したデータを収納
   List<Map<String, dynamic>> events = [];
   Map<String, dynamic> weather = {};
+  bool displayed = false;
 
+  DateTime currentDate = DateTime.now();
   @override
   void initState() {
     super.initState();
@@ -48,7 +50,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  //天気と温度をlocalhostから取得する関数
+  // 天気と温度を localhost から取得する関数
   Future<void> fetchWeatherData() async {
     final response =
         await http.get(Uri.parse('http://localhost:8080/ccc/weather'));
@@ -58,8 +60,10 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         weather = {
           'area': jsonData['area'] ?? '',
-          'temperature_max': jsonData['temperature_max'] ?? '',
-          'temperature_min': jsonData['temperature_min'] ?? '',
+          'temperature_max': jsonData['temp_max'] ?? '',
+          'temperature_min': jsonData['temp_min'] ?? '',
+          'temperature_max_tomorrow': jsonData['temp_max_tomorrow'] ?? '',
+          'temperature_min_tomorrow': jsonData['temp_min_tomorrow'] ?? '',
           'text': jsonData['text'] ?? '',
           'weather_code': jsonData['weather_code'] ?? '',
         };
@@ -97,12 +101,44 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  //温度を取得
+  String getTemp(
+    String highToday,
+    String highTmrw,
+    String lowToday,
+    String lowTmrw,
+  ) {
+    String high, low;
+    if (highToday != '') {
+      high = highToday;
+    } else {
+      high = highTmrw;
+    }
+    if (lowToday != '') {
+      // Corrected from highToday
+      low = lowToday;
+    } else {
+      low = lowTmrw;
+    }
+    return 'high: $high℃\nlow: $low℃';
+  }
+
+  //今日か確かめる
+  bool isToday(String date) {
+    DateTime currentDate = DateTime.now();
+    DateTime eventDate = DateTime.parse(date);
+
+    return currentDate.year == eventDate.year &&
+        currentDate.month == eventDate.month &&
+        currentDate.day == eventDate.day;
+  }
+
   @override
   Widget build(BuildContext context) {
     print("hi");
     print(events);
     print(weather);
-
+    displayed = false;
     return Scaffold(
       backgroundColor: Color(0xFFEFF8FF),
       body: Center(
@@ -173,27 +209,37 @@ class _HomePageState extends State<HomePage> {
                         child: ListView.builder(
                           itemCount: events.length,
                           itemBuilder: (context, index) {
-                            return Container(
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 10),
-                              height: 20,
-                              decoration: BoxDecoration(
-                                color: index % 2 == 0
-                                    ? Color(0xFFA9CF58)
-                                    : Color(0xFF75CDFF),
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  events[index]['summary'] ?? '予定${index + 1}',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                  textAlign: TextAlign.center,
+                            //同日の予定しか表示させないための仕組み
+                            DateTime eventDate =
+                                DateTime.parse(events[index]['date']);
+                            if (eventDate.year == currentDate.year &&
+                                eventDate.month == currentDate.month &&
+                                eventDate.day == currentDate.day) {
+                              return Container(
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 10),
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  color: index % 2 == 0
+                                      ? Color(0xFFA9CF58)
+                                      : Color(0xFF75CDFF),
+                                  borderRadius: BorderRadius.circular(20.0),
                                 ),
-                              ),
-                            );
+                                child: Center(
+                                  child: Text(
+                                    events[index]['summary'] ??
+                                        '予定${index + 1}',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return null;
+                            }
                           },
                         ),
                       ),
@@ -217,27 +263,42 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Expanded(
                     child: Container(
-                        padding: const EdgeInsets.all(10.0),
-                        margin: const EdgeInsets.all(15.0),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                            child: Text(
-                          'high: ${weather["temperature_max"] ?? "N/A"}℃\nlow: ${weather["temperature_min"] ?? "N/A"}℃',
+                      padding: const EdgeInsets.all(10.0),
+                      margin: const EdgeInsets.all(15.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: Text(
+                          (weather != null &&
+                                  weather.containsKey('temperature_max') &&
+                                  weather.containsKey(
+                                      'temperature_max_tomorrow') &&
+                                  weather.containsKey('temperature_min') &&
+                                  weather
+                                      .containsKey('temperature_min_tomorrow'))
+                              ? getTemp(
+                                  weather['temperature_max'],
+                                  weather['temperature_max_tomorrow'],
+                                  weather['temperature_min'],
+                                  weather['temperature_min_tomorrow'],
+                                )
+                              : 'Temperature data not available',
                           style: TextStyle(
                             fontSize: 20.0,
                           ),
-                        ))),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -274,49 +335,54 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     Expanded(
-                      //イベントを全て探索
-                      //TODO: 同日のものだけ表示できるようにさせる
+                      // イベントを全て探索
                       child: ListView.builder(
                         itemCount: events.length,
                         itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              //イベント全てのものを出力する
-                              ListView.builder(
-                                shrinkWrap: true,
-                                physics: const ClampingScrollPhysics(),
-                                itemCount: events[index]['items'].length,
-                                itemBuilder: (context, itemIndex) {
-                                  final item =
-                                      events[index]['items'][itemIndex];
+                          // 今日の日付のイベント＆まだ一回も出力してない場合のみアイテムを出力
+                          if (isToday(events[index]['date']) && !displayed) {
+                            displayed = true;
+                            return Column(
+                              children: [
+                                // イベントのアイテムを出力する
+                                GridView.builder(
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    mainAxisSpacing:
+                                        5.0, // Adjust main axis spacing
+                                    crossAxisSpacing:
+                                        5.0, // Adjust cross axis spacing
+                                  ),
+                                  shrinkWrap: true,
+                                  physics: const ClampingScrollPhysics(),
+                                  itemCount: events[index]['items'].length,
+                                  itemBuilder: (context, itemIndex) {
+                                    final item =
+                                        events[index]['items'][itemIndex];
 
-                                  return Row(
-                                    children: [
-                                      if (itemIndex % 2 == 0)
-                                        Container(
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 15.0),
-                                          height: 30,
-                                          color: Colors.blue,
-                                          child: Text(item['name'] ?? ''),
-                                        )
-                                      else
-                                        Container(
-                                          margin:
-                                              const EdgeInsets.only(left: 15.0),
-                                          height: 30,
-                                          color: Colors.green,
-                                          child: Text(item['name'] ?? ''),
+                                    return Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 15),
+                                      height: 5,
+                                      width: 5,
+                                      color: Colors.green,
+                                      child: Text(
+                                        item['name'] ?? '',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.normal,
                                         ),
-                                    ],
-                                  );
-                                },
-                              ),
-
-                              // Divider between events
-                              const Divider(),
-                            ],
-                          );
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            );
+                          } else {
+                            return Container(); // Return an empty container for events not matching today's date
+                          }
                         },
                       ),
                     ),
