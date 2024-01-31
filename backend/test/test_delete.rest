@@ -3,7 +3,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "id": 8,
+    "id": 1,
     "weight": 3,
     "category": "exam",
     "name": "時計"

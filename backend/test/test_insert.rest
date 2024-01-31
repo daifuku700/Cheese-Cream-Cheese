@@ -3,7 +3,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "category": "mtg",
+    "category": "job",
     "name": "腕時計",
     "weight": -1
 }

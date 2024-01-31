@@ -111,14 +111,39 @@ func Calender(c *gin.Context) {
 		})
 	} else {
 		var eventList []Event
+		mp := map[string]map[string]bool{}
 		for _, item := range events.Items {
 			date := item.Start.DateTime
 			if date == "" {
 				date = item.Start.Date
 			}
+			date = date[:10]
 			summary := item.Summary
 			category := components.GetCategory(summary)
-			items := components.GetItemList(category)
+
+			if _, ok := mp[date]; !ok {
+				mp[date] = make(map[string]bool)
+			}
+			mp[date][category] = true
+		}
+
+		usedItem := map[string][]components.Item{}
+		for _, item := range events.Items {
+			date := item.Start.DateTime
+			if date == "" {
+				date = item.Start.Date
+			}
+			date = date[:10]
+			summary := item.Summary
+
+			var items []components.Item
+			if val, ok := usedItem[date]; ok {
+				items = val
+			} else {
+				items = components.GetItemList(mp[date])
+			}
+
+			usedItem[date] = items
 			fmt.Printf("%v: %v\n", date, summary)
 			if err != nil {
 				log.Fatal(err)
