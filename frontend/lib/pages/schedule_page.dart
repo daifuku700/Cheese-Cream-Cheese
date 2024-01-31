@@ -17,6 +17,7 @@ class _SchedulePageState extends State<SchedulePage> {
   List<Map<String, String>> events = [];
   Map<String, List<Map<String, dynamic>>> items = {};
   late TextEditingController controller;
+  List<dynamic> jsonData = [];
 
   @override
   void initState() {
@@ -31,12 +32,12 @@ class _SchedulePageState extends State<SchedulePage> {
     super.dispose();
   }
 
+
   Future<void> fetchData() async {
     http.Response response =
         await http.get(Uri.parse('http://localhost:8080/ccc/calendar'));
-
     if (response.statusCode == 200) {
-      final List<dynamic> jsonData = json.decode(response.body);
+      jsonData = json.decode(response.body);
       setState(() {
         events = jsonData.map<Map<String, String>>((event) {
           return {
@@ -70,12 +71,16 @@ class _SchedulePageState extends State<SchedulePage> {
     }
 
     Map<String, List<Map<String, dynamic>>> groupedItems = {};
-    List<Map<String, dynamic>> items = [];
-    for (var item in items) {
+    for (var item in jsonData) {
+      /***
+       * ! item['items']でちゃんとアクセスできるようになっている。
+       * TODO このあとグルーピングしてくださいな！！！
+       */
+      print(item["items"]);
       if (!groupedItems.containsKey(item['date'])) {
-        groupedItems[item['date']] = item['items'];
+        // groupedItems[item['date']] = item['items'];
       } else {
-        groupedItems[item['date']]?.addAll(item['items']);
+        // groupedItems[item['date']]?.addAll(item['items']);
       }
     }
 
