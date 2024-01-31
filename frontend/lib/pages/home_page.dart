@@ -17,7 +17,9 @@ class _HomePageState extends State<HomePage> {
   //ここにAPIから取得したデータを収納
   List<Map<String, dynamic>> events = [];
   Map<String, dynamic> weather = {};
+  bool displayed = false;
 
+  DateTime currentDate = DateTime.now();
   @override
   void initState() {
     super.initState();
@@ -48,7 +50,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  //天気と温度をlocalhostから取得する関数
+  // 天気と温度を localhost から取得する関数
   Future<void> fetchWeatherData() async {
     final response =
         await http.get(Uri.parse('http://localhost:8080/ccc/weather'));
@@ -58,8 +60,10 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         weather = {
           'area': jsonData['area'] ?? '',
-          'temperature_max': jsonData['temperature_max'] ?? '',
-          'temperature_min': jsonData['temperature_min'] ?? '',
+          'temperature_max': jsonData['temp_max'] ?? '',
+          'temperature_min': jsonData['temp_min'] ?? '',
+          'temperature_max_tomorrow': jsonData['temp_max_tomorrow'] ?? '',
+          'temperature_min_tomorrow': jsonData['temp_min_tomorrow'] ?? '',
           'text': jsonData['text'] ?? '',
           'weather_code': jsonData['weather_code'] ?? '',
         };
@@ -77,23 +81,107 @@ class _HomePageState extends State<HomePage> {
     return formatter.format(now);
   }
 
+  //天気の画像を変える
+  String getImagePath(String weatherText) {
+    if (weatherText != null && weatherText.isNotEmpty) {
+      switch (weatherText[0]) {
+        case '晴':
+          return "assets/home_page/sunny.png";
+        case '曇':
+          return "assets/home_page/cloudy.png";
+        case '雨':
+          return "assets/home_page/rain.png";
+        case '雪':
+          return "assets/home_page/snow.png";
+        default:
+          return "assets/home_page/sunny_cloudy.png";
+      }
+    } else {
+      return "assets/home_page/sunny_cloudy.png";
+    }
+  }
+
+  //温度を取得
+  String getTemp(
+    String highToday,
+    String highTmrw,
+    String lowToday,
+    String lowTmrw,
+  ) {
+    String high, low;
+    if (highToday != '') {
+      high = highToday;
+    } else {
+      high = highTmrw;
+    }
+    if (lowToday != '') {
+      // Corrected from highToday
+      low = lowToday;
+    } else {
+      low = lowTmrw;
+    }
+    return 'high: $high℃\nlow: $low℃';
+  }
+
+  //今日か確かめる
+  bool isToday(String date) {
+    DateTime currentDate = DateTime.now();
+    DateTime eventDate = DateTime.parse(date);
+
+    return currentDate.year == eventDate.year &&
+        currentDate.month == eventDate.month &&
+        currentDate.day == eventDate.day;
+  }
+
   @override
   Widget build(BuildContext context) {
     print("hi");
     print(events);
     print(weather);
+    displayed = false;
     return Scaffold(
       backgroundColor: Color(0xFFEFF8FF),
       body: Center(
         child: Column(
           children: <Widget>[
             //おはよう今日は〇〇の所
-            Container(
+            Expanded(
+              flex: 1,
+              child: Container(
+                  margin: const EdgeInsets.all(15.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5), // Set shadow color
+                        spreadRadius: 2, // Set the spread radius of the shadow
+                        blurRadius: 5, // Set the blur radius of the shadow
+                        offset: Offset(0, 3), // Set the offset of the shadow
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      'おはよう！\n今日は${_getFormattedDate()}', // Add your text here
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  )),
+            ),
+
+            //今日の予定
+            Expanded(
+              flex: 2,
+              child: Container(
+                padding: const EdgeInsets.all(10.0),
                 margin: const EdgeInsets.all(15.0),
-                height: 70,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(20.0),
+                  borderRadius: BorderRadius.circular(15.0),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey.withOpacity(0.5), // Set shadow color
@@ -103,96 +191,80 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-                child: Center(
-                  child: Text(
-                    'おはよう！\n今日は${_getFormattedDate()}', // Add your text here
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      '今日の予定', // Add your text here
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                )),
 
-            //今日の予定
-            Container(
-              padding: const EdgeInsets.all(10.0),
-              margin: const EdgeInsets.all(15.0),
-              height: 120,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15.0),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5), // Set shadow color
-                    spreadRadius: 2, // Set the spread radius of the shadow
-                    blurRadius: 5, // Set the blur radius of the shadow
-                    offset: Offset(0, 3), // Set the offset of the shadow
-                  ),
-                ],
-              ),
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    '今日の予定', // Add your text here
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-
-                  //一つ一つの予定
-                  Container(
-                    height: 60,
-                    child: Scrollbar(
-                      child: ListView.builder(
-                        itemCount: events.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 10),
-                            height: 20,
-                            decoration: BoxDecoration(
-                              color: index % 2 == 0
-                                  ? Color(0xFFA9CF58)
-                                  : Color(0xFF75CDFF),
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            child: Center(
-                              child: Text(
-                                events[index]['summary'] ?? '予定${index + 1}',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.normal,
+                    //一つ一つの予定
+                    Container(
+                      height: 60,
+                      child: Scrollbar(
+                        child: ListView.builder(
+                          itemCount: events.length,
+                          itemBuilder: (context, index) {
+                            //同日の予定しか表示させないための仕組み
+                            DateTime eventDate =
+                                DateTime.parse(events[index]['date']);
+                            if (eventDate.year == currentDate.year &&
+                                eventDate.month == currentDate.month &&
+                                eventDate.day == currentDate.day) {
+                              return Container(
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 10),
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  color: index % 2 == 0
+                                      ? Color(0xFFA9CF58)
+                                      : Color(0xFF75CDFF),
+                                  borderRadius: BorderRadius.circular(20.0),
                                 ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          );
-                        },
+                                child: Center(
+                                  child: Text(
+                                    events[index]['summary'] ??
+                                        '予定${index + 1}',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return null;
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 2,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      child: Image.asset(
+                        getImagePath(weather["text"]),
+                        width: 50,
+                        height: 50,
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Container(
-                    child: Image.asset(
-                      "assets/home_page/cloudy.png",
-                      width: 50,
-                      height: 50,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
+                  Expanded(
+                    child: Container(
                       padding: const EdgeInsets.all(10.0),
                       margin: const EdgeInsets.all(15.0),
-                      height: 100,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(15.0),
@@ -207,86 +279,123 @@ class _HomePageState extends State<HomePage> {
                       ),
                       child: Center(
                         child: Text(
-                          '15℃', // Add your text here
+                          (weather != null &&
+                                  weather.containsKey('temperature_max') &&
+                                  weather.containsKey(
+                                      'temperature_max_tomorrow') &&
+                                  weather.containsKey('temperature_min') &&
+                                  weather
+                                      .containsKey('temperature_min_tomorrow'))
+                              ? getTemp(
+                                  weather['temperature_max'],
+                                  weather['temperature_max_tomorrow'],
+                                  weather['temperature_min'],
+                                  weather['temperature_min_tomorrow'],
+                                )
+                              : 'Temperature data not available',
                           style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.normal,
+                            fontSize: 20.0,
                           ),
-                          textAlign: TextAlign.center,
                         ),
-                      )),
-                ),
-              ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
 
             //持ち物リスト
-            Container(
-              margin: const EdgeInsets.all(15.0),
-              height: 150, // Adjust the height to accommodate the list
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20.0),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'これ持った？',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.normal,
+            Expanded(
+              flex: 2,
+              child: Container(
+                margin: const EdgeInsets.all(15.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'これ持った？',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.normal,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
                     ),
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: events.length,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            ListTile(
-                              title: Text(
-                                  events[index]['summary'] ?? '予定${index + 1}'),
-                              // Other ListTile properties as needed
-                            ),
-                            // Display items for each event
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: const ClampingScrollPhysics(),
-                              itemCount: events[index]['items'].length,
-                              itemBuilder: (context, itemIndex) {
-                                final item = events[index]['items'][itemIndex];
-                                return ListTile(
-                                  title: Text(item['name'] ?? ''),
-                                  subtitle: Text(
-                                      'Category: ${item['category'] ?? ''}'),
-                                  // Add other item details as needed
-                                );
-                              },
-                            ),
-                            // Divider between events
-                            const Divider(),
-                          ],
-                        );
-                      },
+                    Expanded(
+                      // イベントを全て探索
+                      child: ListView.builder(
+                        itemCount: events.length,
+                        itemBuilder: (context, index) {
+                          // 今日の日付のイベント＆まだ一回も出力してない場合のみアイテムを出力
+                          if (isToday(events[index]['date']) && !displayed) {
+                            displayed = true;
+                            return Column(
+                              children: [
+                                // イベントのアイテムを出力する
+                                GridView.builder(
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    mainAxisSpacing:
+                                        5.0, // Adjust main axis spacing
+                                    crossAxisSpacing:
+                                        5.0, // Adjust cross axis spacing
+                                  ),
+                                  shrinkWrap: true,
+                                  physics: const ClampingScrollPhysics(),
+                                  itemCount: events[index]['items'].length,
+                                  itemBuilder: (context, itemIndex) {
+                                    final item =
+                                        events[index]['items'][itemIndex];
+
+                                    return Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 15),
+                                      height: 5,
+                                      width: 5,
+                                      color: Colors.white,
+                                      child: Text(
+                                        item['name'] ?? '',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            );
+                          } else {
+                            return Container(); // Return an empty container for events not matching today's date
+                          }
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-            Text(
-              'いってらっしゃい！',
-            ),
+            Container(
+              margin: const EdgeInsets.only(bottom: 30),
+              child: Text(
+                'いってらっしゃい！',
+              ),
+            )
           ],
         ),
       ),

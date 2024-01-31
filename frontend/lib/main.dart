@@ -39,6 +39,7 @@ class _MainPageState extends State<MainPage> {
     HomePage(),
     SchedulePage(),
   ];
+  final display = ['Home', 'Schedule'];
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +47,13 @@ class _MainPageState extends State<MainPage> {
       //上のバー
       appBar: AppBar(
         backgroundColor: Color(0xFFEFF8FF),
+        title: Text(
+          display[index],
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
 
       //中身（各自のページファイルでいじる）
