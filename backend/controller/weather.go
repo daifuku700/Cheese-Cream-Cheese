@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -63,29 +65,16 @@ func WeatherPost(c *gin.Context) {
 }
 
 func WeatherGet(c *gin.Context) {
-	body, err := httpGetBody("https://www.jma.go.jp/bosai/forecast/data/forecast/130000.json")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	weather, err := formatWeather(body)
-	if err != nil {
-		return
-	}
-
-	area := (*weather)[0].TimeSeries[0].Areas[0].Area.Name
-	weather_code := (*weather)[0].TimeSeries[0].Areas[0].WeatherCodes[0]
-	text := (*weather)[0].TimeSeries[0].Areas[0].Weathers[0]
-	temperature_min := (*weather)[0].TimeSeries[2].Areas[0].Temps[0]
-	temperature_max := (*weather)[0].TimeSeries[2].Areas[0].Temps[1]
+	area, weather_code, text, temp_min, temp_max, temp_min_tomorrow, temp_max_tomorrow := formatWeather()
 
 	c.JSON(200, gin.H{
 		"area": area,
 		"weather_code": weather_code,
 		"text": text,
-		"temperature_min": temperature_min,
-		"temperature_max": temperature_max,
+		"temp_min": temp_min,
+		"temp_max": temp_max,
+		"temp_min_tomorrow": temp_min_tomorrow,
+		"temp_max_tomorrow": temp_max_tomorrow,
 	})
 }
 
@@ -107,11 +96,25 @@ func httpGetBody(url string) ([]byte, error) {
 	return body, nil
 }
 
-func formatWeather(body []byte) (*Weather, error) {
+func formatWeather() (string, string, string, string, string, string, string) {
+	body, err := httpGetBody("https://www.jma.go.jp/bosai/forecast/data/forecast/130000.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	weather := new(Weather)
 	if err := json.Unmarshal(body, weather); err != nil {
-		err := fmt.Errorf("json unmarshal error: %s", err)
-		return nil, err
+		log.Fatal(err)
 	}
-	return weather, nil
+
+	area := (*weather)[1].TimeSeries[1].Areas[0].Area.Name
+	weather_code := (*weather)[0].TimeSeries[0].Areas[0].WeatherCodes[0]
+	text := (*weather)[0].TimeSeries[0].Areas[0].Weathers[0]
+	text = strings.ReplaceAll(text, "　", "")
+	temp_min := (*weather)[1].TimeSeries[1].Areas[0].TempsMin[0]
+	temp_min_tomorrow := (*weather)[1].TimeSeries[1].Areas[0].TempsMin[1]
+	temp_max := (*weather)[1].TimeSeries[1].Areas[0].TempsMax[0]
+	temp_max_tomorrow := (*weather)[1].TimeSeries[1].Areas[0].TempsMax[1]
+
+	return area, weather_code, text, temp_min, temp_max, temp_min_tomorrow, temp_max_tomorrow
 }

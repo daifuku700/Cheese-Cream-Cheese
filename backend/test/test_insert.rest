@@ -1,0 +1,9 @@
+POST http://localhost:8080/ccc/insertDB HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+    "category": "mtg",
+    "name": "腕時計",
+    "weight": -1
+}

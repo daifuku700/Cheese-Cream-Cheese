@@ -99,7 +99,7 @@ func Calender(c *gin.Context) {
 
 	t := time.Now().Format(time.RFC3339)
 	events, err := srv.Events.List("primary").ShowDeleted(false).
-		SingleEvents(true).TimeMin(t).MaxResults(10).OrderBy("startTime").Do()
+		SingleEvents(true).TimeMin(t).MaxResults(100).OrderBy("startTime").Do()
 	if err != nil {
 		log.Fatalf("Unable to retrieve next ten of the user's events: %v", err)
 	}
@@ -119,6 +119,7 @@ func Calender(c *gin.Context) {
 			summary := item.Summary
 			category := components.GetCategory(summary)
 			items := components.GetItemList(category)
+			fmt.Printf("%v: %v\n", date, summary)
 			if err != nil {
 				log.Fatal(err)
 			}
