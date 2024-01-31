@@ -146,7 +146,7 @@ class _SchedulePageState extends State<SchedulePage> {
     Future<String?> openDialog() => showDialog<String>(
           context: context,
           builder: (context) => AlertDialog(
-              title: Text('hey'),
+              title: Text('持ち物追加'),
               content: TextField(
                 decoration: InputDecoration(),
                 controller: controller,
