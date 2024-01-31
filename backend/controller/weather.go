@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"log"
 
 	"github.com/gin-gonic/gin"
 )
@@ -63,22 +64,7 @@ func WeatherPost(c *gin.Context) {
 }
 
 func WeatherGet(c *gin.Context) {
-	body, err := httpGetBody("https://www.jma.go.jp/bosai/forecast/data/forecast/130000.json")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	weather, err := formatWeather(body)
-	if err != nil {
-		return
-	}
-
-	area := (*weather)[0].TimeSeries[0].Areas[0].Area.Name
-	weather_code := (*weather)[0].TimeSeries[0].Areas[0].WeatherCodes[0]
-	text := (*weather)[0].TimeSeries[0].Areas[0].Weathers[0]
-	temperature_min := (*weather)[0].TimeSeries[2].Areas[0].Temps[0]
-	temperature_max := (*weather)[0].TimeSeries[2].Areas[0].Temps[1]
+	area, weather_code, text, temperature_min, temperature_max := formatWeather()
 
 	c.JSON(200, gin.H{
 		"area": area,
@@ -107,11 +93,22 @@ func httpGetBody(url string) ([]byte, error) {
 	return body, nil
 }
 
-func formatWeather(body []byte) (*Weather, error) {
+func formatWeather() (string, string, string, string, string) {
+	body, err := httpGetBody("https://www.jma.go.jp/bosai/forecast/data/forecast/130000.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	weather := new(Weather)
 	if err := json.Unmarshal(body, weather); err != nil {
-		err := fmt.Errorf("json unmarshal error: %s", err)
-		return nil, err
+		log.Fatal(err)
 	}
-	return weather, nil
+
+	area := (*weather)[0].TimeSeries[0].Areas[0].Area.Name
+	weather_code := (*weather)[0].TimeSeries[0].Areas[0].WeatherCodes[0]
+	text := (*weather)[0].TimeSeries[0].Areas[0].Weathers[0]
+	temperature_min := (*weather)[0].TimeSeries[2].Areas[0].Temps[0]
+	temperature_max := (*weather)[0].TimeSeries[2].Areas[0].Temps[1]
+
+	return area, weather_code, text, temperature_min, temperature_max
 }
