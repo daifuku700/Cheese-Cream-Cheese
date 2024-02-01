@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme:
-            ColorScheme.fromSeed(seedColor: Color(0xFFEFF8FF).withOpacity(1)),
+            ColorScheme.fromSeed(seedColor: const Color(0xFFEFF8FF).withOpacity(1)),
         useMaterial3: true,
       ),
       home: const MainPage(title: 'Flutter Demo Home Page'),
@@ -67,7 +67,7 @@ class _MainPageState extends State<MainPage> {
         color: const Color(0xFFA4D4FF),
         backgroundColor: const Color(0xFFEFF8FF),
         index: index,
-        animationDuration: const Duration(milliseconds: 800),
+        animationDuration: const Duration(milliseconds: 600),
         onTap: (index) => setState(() => this.index = index),
         items: const [
           Icon(

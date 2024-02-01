@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class SchedulePage extends StatefulWidget {
-  const SchedulePage({Key? key});
+  const SchedulePage({super.key, Key? customKey});
 
   @override
   State<SchedulePage> createState() => _SchedulePageState();
@@ -17,6 +18,7 @@ class _SchedulePageState extends State<SchedulePage> {
   Map<String, List<Map<String, dynamic>>> items = {};
   late TextEditingController controller;
   List<dynamic> jsonData = [];
+  bool loading = false;
 
   @override
   void initState() {
@@ -32,9 +34,11 @@ class _SchedulePageState extends State<SchedulePage> {
   }
 
   Future<void> fetchData() async {
+    loading = true;
     http.Response response =
         await http.get(Uri.parse('http://localhost:8080/ccc/calendar'));
     if (response.statusCode == 200) {
+      loading = false;
       jsonData = json.decode(response.body);
       setState(() {
         events = jsonData.map<Map<String, String>>((event) {
@@ -45,6 +49,7 @@ class _SchedulePageState extends State<SchedulePage> {
         }).toList();
       });
     } else {
+      loading = false;
       throw Exception('Failed to load data');
     }
   }
@@ -66,6 +71,15 @@ class _SchedulePageState extends State<SchedulePage> {
       } else {
         groupedEvents[event['date']]?.add(event);
       }
+    }
+
+    if (loading) {
+      return Scaffold(
+          backgroundColor: Color(0xFFEFF8FF),
+          body: Center(
+            child: LoadingAnimationWidget.staggeredDotsWave(
+                color: Color(0xFFA4D4FF), size: 100),
+          ));
     }
 
     //controllerをinitializeしなきゃ何故かバグるからここでやっとく
@@ -307,7 +321,7 @@ class _SchedulePageState extends State<SchedulePage> {
                         height: 56, // 適切な高さに調整してください
                         child: ListView(
                           physics:
-                              NeverScrollableScrollPhysics(), // スクロールを無効にする
+                              const NeverScrollableScrollPhysics(), // スクロールを無効にする
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal, // 横方向にスクロールする
                           children: [
