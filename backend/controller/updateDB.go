@@ -65,6 +65,18 @@ func UpdateDB(c *gin.Context) {
 		weight = item.Weight
 	}
 
+	cmd = "SELECT EXISTS(SELECT * FROM Items WHERE category = $1 AND name = $2 AND id != $3)"
+	err = db.QueryRow(cmd, category, name, id).Scan(&exist)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if exist {
+		c.JSON(400, gin.H{
+			"message": "item already exists",
+		})
+		return
+	}
+
 	cmd = "UPDATE Items SET category = $1, name = $2, weight = $3 WHERE id = $4"
 	_, err = db.Exec(cmd, category, name, weight, id)
 	if err != nil {
