@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> events = [];
   Map<String, dynamic> weather = {};
   bool displayed = false;
+  bool loading = false;
 
   DateTime currentDate = DateTime.now();
   @override
@@ -28,10 +30,12 @@ class _HomePageState extends State<HomePage> {
 
   //スケジュールと持ち物をlocalhostから取得する関数
   Future<void> fetchEventData() async {
+    loading = true;
     final response =
         await http.get(Uri.parse('http://localhost:8080/ccc/calendar'));
 
     if (response.statusCode == 200) {
+      loading = false;
       final List<dynamic> jsonData = json.decode(response.body);
       setState(() {
         events = jsonData.map((event) {
@@ -45,6 +49,7 @@ class _HomePageState extends State<HomePage> {
         }).toList();
       });
     } else {
+      loading = false;
       throw Exception('Failed to load data');
     }
   }
@@ -134,6 +139,15 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    if (loading) {
+      return Scaffold(
+          backgroundColor: Color(0xFFEFF8FF),
+          body: Center(
+            child: LoadingAnimationWidget.staggeredDotsWave(
+                color: Color(0xFFA4D4FF), size: 100),
+          ));
+    }
+
     displayed = false;
     return Scaffold(
       backgroundColor: const Color(0xFFEFF8FF),
