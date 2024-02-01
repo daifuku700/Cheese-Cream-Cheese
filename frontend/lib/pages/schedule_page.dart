@@ -75,17 +75,17 @@ class _SchedulePageState extends State<SchedulePage> {
     Color getColorForSummary(String summary) {
       switch (summary) {
         case "授業":
-          return const Color(0xFF4CAF50); // Green
+          return const Color(0xFFA9CF58); // Green
         case "バイト":
           return const Color(0xFFFFC107); // Yellow
         case "打ち上げ":
-          return const Color(0xFFE91E63); // Pink
+          return const Color(0xFFFF7575); // Pink
         case "試験":
-          return const Color(0xFF2196F3); // Blue
+          return const Color(0xFF75CDFF); // Blue
         case "飲み会":
-          return const Color(0xFFFF5722); // Orange
+          return const Color(0xFFFF7575); // Orange
         case "MTG":
-          return const Color(0xFF9C27B0); // Purple
+          return const Color(0xFFD39CFF); // Purple
         default:
           return Colors.grey; // Default color for unknown summary
       }

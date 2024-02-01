@@ -184,7 +184,8 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.grey.withOpacity(0.5), // Set shadow color
                       spreadRadius: 2, // Set the spread radius of the shadow
                       blurRadius: 5, // Set the blur radius of the shadow
-                      offset: const Offset(0, 3), // Set the offset of the shadow
+                      offset:
+                          const Offset(0, 3), // Set the offset of the shadow
                     ),
                   ],
                 ),
@@ -252,7 +253,9 @@ class _HomePageState extends State<HomePage> {
                   Expanded(
                     child: Container(
                       child: Image.asset(
-                        (weather["text"] == null) ? "assets/home_page/loading.gif" : getImagePath(weather["text"]),
+                        (weather["text"] == null)
+                            ? "assets/home_page/loading.gif"
+                            : getImagePath(weather["text"]),
                         width: 50,
                         height: 50,
                       ),
