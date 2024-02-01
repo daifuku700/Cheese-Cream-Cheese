@@ -32,7 +32,6 @@ class _SchedulePageState extends State<SchedulePage> {
     super.dispose();
   }
 
-
   Future<void> fetchData() async {
     http.Response response =
         await http.get(Uri.parse('http://localhost:8080/ccc/calendar'));
@@ -76,7 +75,7 @@ class _SchedulePageState extends State<SchedulePage> {
        * ! item['items']でちゃんとアクセスできるようになっている。
        * TODO このあとグルーピングしてくださいな！！！
        */
-      print(item["items"]);
+      // print(item["items"]);
       if (!groupedItems.containsKey(item['date'])) {
         // groupedItems[item['date']] = item['items'];
       } else {

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -83,7 +82,7 @@ class _HomePageState extends State<HomePage> {
 
   //天気の画像を変える
   String getImagePath(String weatherText) {
-    if (weatherText != null && weatherText.isNotEmpty) {
+    if (weatherText != "" && weatherText.isNotEmpty) {
       switch (weatherText[0]) {
         case '晴':
           return "assets/home_page/sunny.png";
@@ -120,7 +119,7 @@ class _HomePageState extends State<HomePage> {
     } else {
       low = lowTmrw;
     }
-    return 'high: $high℃\nlow: $low℃';
+    return '最高気温：$high℃\n最低気温：$low℃';
   }
 
   //今日か確かめる
@@ -161,7 +160,7 @@ class _HomePageState extends State<HomePage> {
                   child: Center(
                     child: Text(
                       'おはよう！\n今日は${_getFormattedDate()}', // Add your text here
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.normal,
                       ),
@@ -190,7 +189,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: Column(
                   children: <Widget>[
-                    Text(
+                    const Text(
                       '今日の予定', // Add your text here
                       style: TextStyle(
                         fontSize: 20,
@@ -226,7 +225,7 @@ class _HomePageState extends State<HomePage> {
                                   child: Text(
                                     events[index]['summary'] ??
                                         '予定${index + 1}',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.normal,
                                     ),
@@ -252,7 +251,7 @@ class _HomePageState extends State<HomePage> {
                   Expanded(
                     child: Container(
                       child: Image.asset(
-                        getImagePath(weather["text"]),
+                        (weather["text"] == null) ? "assets/home_page/loading.png" : "assets/home_page/sunny.png",
                         width: 50,
                         height: 50,
                       ),
@@ -270,14 +269,13 @@ class _HomePageState extends State<HomePage> {
                             color: Colors.grey.withOpacity(0.5),
                             spreadRadius: 2,
                             blurRadius: 5,
-                            offset: Offset(0, 3),
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
                       child: Center(
                         child: Text(
-                          (weather != null &&
-                                  weather.containsKey('temperature_max') &&
+                          (weather.containsKey('temperature_max') &&
                                   weather.containsKey(
                                       'temperature_max_tomorrow') &&
                                   weather.containsKey('temperature_min') &&
@@ -290,7 +288,7 @@ class _HomePageState extends State<HomePage> {
                                   weather['temperature_min_tomorrow'],
                                 )
                               : 'Temperature data not available',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 20.0,
                           ),
                         ),
@@ -320,8 +318,8 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Text(
                         'これ持った？',
                         style: TextStyle(
@@ -344,7 +342,7 @@ class _HomePageState extends State<HomePage> {
                                 // イベントのアイテムを出力する
                                 GridView.builder(
                                   gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2,
                                     mainAxisSpacing:
                                         5.0, // Adjust main axis spacing
@@ -365,7 +363,7 @@ class _HomePageState extends State<HomePage> {
                                       color: Colors.white,
                                       child: Text(
                                         item['name'] ?? '',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.normal,
                                         ),
@@ -388,7 +386,7 @@ class _HomePageState extends State<HomePage> {
             ),
             Container(
               margin: const EdgeInsets.only(bottom: 30),
-              child: Text(
+              child: const Text(
                 'いってらっしゃい！',
               ),
             )
