@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -83,7 +82,7 @@ class _HomePageState extends State<HomePage> {
 
   //天気の画像を変える
   String getImagePath(String weatherText) {
-    if (weatherText != null && weatherText.isNotEmpty) {
+    if (weatherText != "" && weatherText.isNotEmpty) {
       switch (weatherText[0]) {
         case '晴':
           return "assets/home_page/sunny.png";
@@ -120,7 +119,7 @@ class _HomePageState extends State<HomePage> {
     } else {
       low = lowTmrw;
     }
-    return 'high: $high℃\nlow: $low℃';
+    return '最高気温：$high℃\n最低気温：$low℃';
   }
 
   //今日か確かめる
@@ -253,7 +252,7 @@ class _HomePageState extends State<HomePage> {
                   Expanded(
                     child: Container(
                       child: Image.asset(
-                        getImagePath(weather["text"]),
+                        (weather["text"] == null) ? "assets/home_page/loading.gif" : getImagePath(weather["text"]),
                         width: 50,
                         height: 50,
                       ),
@@ -277,8 +276,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       child: Center(
                         child: Text(
-                          (weather != null &&
-                                  weather.containsKey('temperature_max') &&
+                          (weather.containsKey('temperature_max') &&
                                   weather.containsKey(
                                       'temperature_max_tomorrow') &&
                                   weather.containsKey('temperature_min') &&
@@ -291,7 +289,7 @@ class _HomePageState extends State<HomePage> {
                                   weather['temperature_min_tomorrow'],
                                 )
                               : 'Temperature data not available',
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 20.0,
                           ),
                         ),

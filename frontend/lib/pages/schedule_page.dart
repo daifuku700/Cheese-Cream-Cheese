@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -75,7 +74,7 @@ class _SchedulePageState extends State<SchedulePage> {
        * ! item['items']でちゃんとアクセスできるようになっている。
        * TODO このあとグルーピングしてくださいな！！！
        */
-      print(item["items"][0]["name"]);
+      print(item["items"]);
       if (!groupedItems.containsKey(item['date'])) {
         // groupedItems[item['date']] = item['items'];
       } else {
