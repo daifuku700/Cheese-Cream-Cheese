@@ -5,6 +5,6 @@ Accept: application/json
 {
     "id": 7,
     "weight": 3,
-    "category": "exam",
-    "name": "時計"
+    "category": "mtg",
+    "name": "スピーカー"
 }

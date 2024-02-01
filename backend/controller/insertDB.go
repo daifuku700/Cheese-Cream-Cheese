@@ -28,6 +28,27 @@ func InsertDB(c *gin.Context) {
 		return
 	}
 
+	var exist bool
+	cmd := "SELECT EXISTS(SELECT * FROM Items WHERE category = $1 AND name = $2)"
+	err = db.QueryRow(cmd, item.Category, item.Name).Scan(&exist)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	if exist {
+		cmd = "UPDATE Items SET weight = weight + 1 WHERE category = $1 AND name = $2"
+		_, err = db.Exec(cmd, item.Category, item.Name)
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
+		c.JSON(200, gin.H{
+			"message": "inserted item",
+		})
+		return
+	}
+
 	weight := item.Weight
 	if weight < 0 {
 		weight = 3
@@ -47,7 +68,7 @@ func InsertDB(c *gin.Context) {
 		return
 	}
 
-	cmd := "INSERT INTO Items (category, name, weight) VALUES($1, $2, $3)"
+	cmd = "INSERT INTO Items (category, name, weight) VALUES($1, $2, $3)"
 	_, err = db.Exec(cmd, item.Category, item.Name, weight)
 	if err != nil {
 		log.Fatal(err)
