@@ -74,6 +74,10 @@ class _SchedulePageState extends State<SchedulePage> {
        * ! item['items']でちゃんとアクセスできるようになっている。
        * TODO このあとグルーピングしてくださいな！！！
        */
+      print(item);
+      print(item["date"]);
+      for (var i = 0; i < item["items"].length; i++)
+        print(item["items"][i]["name"]);
       print(item["items"]);
       if (!groupedItems.containsKey(item['date'])) {
         // groupedItems[item['date']] = item['items'];
@@ -223,16 +227,22 @@ class _SchedulePageState extends State<SchedulePage> {
                             if (item["date"] == dateString &&
                                 item["items"] != null)
                               Center(
-                                child: Text(
-                                  item["items"][0]["name"].toString(),
-                                  // Add your text here
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                  textAlign: TextAlign.center,
+                                child: Column(
+                                  children: List.generate(item["items"].length,
+                                      (index) {
+                                    return Text(
+                                      dateString +
+                                          item["items"][index]["name"]
+                                              .toString(),
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    );
+                                  }),
                                 ),
-                              ),
+                              )
 
                           // Expanded(
                           //   // イベントを全て探索
