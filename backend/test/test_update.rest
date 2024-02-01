@@ -3,8 +3,9 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "id": 7,
+    "id": 10,
     "weight": 3,
-    "category": "mtg",
-    "name": "スピーカー"
+    # "category": "mtg",
+    # "name": "スピーカー",
+    "event_date": "2024-02-02"
 }

@@ -38,13 +38,14 @@ func UpdateDB(c *gin.Context) {
 		return
 	}
 
-	cmd := "SELECT id, category, name, weight FROM Items Where id = $1"
+	cmd := "SELECT id, category, name, weight, event_date FROM Items Where id = $1"
 	row := db.QueryRow(cmd, item.ID)
 	var id int
 	var category string
 	var name string
 	var weight int
-	err = row.Scan(&id, &category, &name, &weight)
+	var eventDate string
+	err = row.Scan(&id, &category, &name, &weight, &eventDate)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -64,9 +65,12 @@ func UpdateDB(c *gin.Context) {
 	if item.Weight >= 0 {
 		weight = item.Weight
 	}
+	if item.EventDate != "" {
+		eventDate = item.EventDate
+	}
 
-	cmd = "SELECT EXISTS(SELECT * FROM Items WHERE category = $1 AND name = $2 AND id != $3)"
-	err = db.QueryRow(cmd, category, name, id).Scan(&exist)
+	cmd = "SELECT EXISTS(SELECT * FROM Items WHERE category = $1 AND name = $2 AND event_date = $3 AND id != $4)"
+	err = db.QueryRow(cmd, category, name, eventDate, id).Scan(&exist)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -77,8 +81,8 @@ func UpdateDB(c *gin.Context) {
 		return
 	}
 
-	cmd = "UPDATE Items SET category = $1, name = $2, weight = $3 WHERE id = $4"
-	_, err = db.Exec(cmd, category, name, weight, id)
+	cmd = "UPDATE Items SET category = $1, name = $2, weight = $3, event_date = $4 WHERE id = $5"
+	_, err = db.Exec(cmd, category, name, weight, eventDate, id)
 	if err != nil {
 		log.Fatal(err)
 	}

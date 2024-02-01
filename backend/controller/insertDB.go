@@ -28,6 +28,13 @@ func InsertDB(c *gin.Context) {
 		return
 	}
 
+	if item.EventDate == "" {
+		c.JSON(400, gin.H{
+			"message": "event_date must not be empty",
+		})
+		return;
+	}
+
 	var exist bool
 	cmd := "SELECT EXISTS(SELECT * FROM Items WHERE category = $1 AND name = $2)"
 	err = db.QueryRow(cmd, item.Category, item.Name).Scan(&exist)
@@ -37,8 +44,8 @@ func InsertDB(c *gin.Context) {
 	}
 
 	if exist {
-		cmd = "UPDATE Items SET weight = weight + 1 WHERE category = $1 AND name = $2"
-		_, err = db.Exec(cmd, item.Category, item.Name)
+		cmd = "UPDATE Items SET weight = weight + 1, event_date = $1 WHERE category = $2 AND name = $3"
+		_, err = db.Exec(cmd, item.EventDate, item.Category, item.Name)
 		if err != nil {
 			log.Fatal(err)
 			return
@@ -68,8 +75,8 @@ func InsertDB(c *gin.Context) {
 		return
 	}
 
-	cmd = "INSERT INTO Items (category, name, weight) VALUES($1, $2, $3)"
-	_, err = db.Exec(cmd, item.Category, item.Name, weight)
+	cmd = "INSERT INTO Items (category, name, weight, event_date) VALUES($1, $2, $3, $4)"
+	_, err = db.Exec(cmd, item.Category, item.Name, weight, item.EventDate)
 	if err != nil {
 		log.Fatal(err)
 		return
