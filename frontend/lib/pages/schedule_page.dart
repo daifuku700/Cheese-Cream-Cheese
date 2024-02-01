@@ -74,16 +74,10 @@ class _SchedulePageState extends State<SchedulePage> {
        * ! item['items']でちゃんとアクセスできるようになっている。
        * TODO このあとグルーピングしてくださいな！！！
        */
-      print(item);
-      print(item["date"]);
+      print('ここから');
+      print(item["items"].length.toString());
       for (var i = 0; i < item["items"].length; i++)
         print(item["items"][i]["name"]);
-      print(item["items"]);
-      if (!groupedItems.containsKey(item['date'])) {
-        // groupedItems[item['date']] = item['items'];
-      } else {
-        // groupedItems[item['date']]?.addAll(item['items']);
-      }
     }
 
     //controllerをinitializeしなきゃ何故かバグるからここでやっとく
@@ -243,59 +237,6 @@ class _SchedulePageState extends State<SchedulePage> {
                                   }),
                                 ),
                               )
-
-                          // Expanded(
-                          //   // イベントを全て探索
-                          //   child: ListView.builder(
-                          //     itemCount: events.length,
-                          //     itemBuilder: (context, index) {
-                          //       // 今日の日付のイベント＆まだ一回も出力してない場合のみアイテムを出力
-                          //       if (dateString == events[index]['date'] && events[index]['items'] != null) {
-                          //         return Column(
-                          //           children: [
-                          //             // イベントのアイテムを出力する
-                          //             GridView.builder(
-                          //               gridDelegate:
-                          //                   SliverGridDelegateWithFixedCrossAxisCount(
-                          //                 crossAxisCount: 2,
-                          //                 mainAxisSpacing:
-                          //                     5.0, // Adjust main axis spacing
-                          //                 crossAxisSpacing:
-                          //                     5.0, // Adjust cross axis spacing
-                          //               ),
-                          //               shrinkWrap: true,
-                          //               physics: const ClampingScrollPhysics(),
-                          //               itemCount:
-                          //                   events[index]['items']!.length,
-                          //               itemBuilder: (context, itemIndex) {
-                          //                 final item =
-                          //                     events[index]['items']![itemIndex];
-
-                          //                 return Container(
-                          //                   margin: const EdgeInsets.symmetric(
-                          //                       horizontal: 15),
-                          //                   height: 5,
-                          //                   width: 5,
-                          //                   color: Colors.white,
-                          //                   child: Text(
-                          //                     item['name'].toString() ?? '',
-                          //                     style: TextStyle(
-                          //                       fontSize: 20,
-                          //                       fontWeight: FontWeight.normal,
-                          //                     ),
-                          //                     textAlign: TextAlign.center,
-                          //                   ),
-                          //                 );
-                          //               },
-                          //             ),
-                          //           ],
-                          //         );
-                          //       } else {
-                          //         return Container(); // Return an empty container for events not matching today's date
-                          //       }
-                          //     },
-                          //   ),
-                          // ),
                         ],
                       ),
                       trailing: IconButton(
