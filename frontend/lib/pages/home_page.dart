@@ -251,7 +251,7 @@ class _HomePageState extends State<HomePage> {
                   Expanded(
                     child: Container(
                       child: Image.asset(
-                        (weather["text"] == null) ? "assets/home_page/loading.png" : "assets/home_page/sunny.png",
+                        (weather["text"] == null) ? "assets/home_page/loading.gif" : getImagePath(weather["text"]),
                         width: 50,
                         height: 50,
                       ),
