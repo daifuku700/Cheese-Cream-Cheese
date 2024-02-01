@@ -27,7 +27,13 @@ func GetItemList(date string, categories map[string]bool) []Item {
 		}
 	}
 
-	rows, err := db.Query("SELECT id, category, name , weight FROM Items ORDER BY weight DESC")
+	cmd = "UPDATE Items SET weight = weight + 10 WHERE event_date = $1"
+	_, err = db.Exec(cmd, date)
+	if err != nil{
+		log.Fatal(err)
+	}
+
+	rows, err := db.Query("SELECT id, category, name, weight, event_date FROM Items ORDER BY weight DESC")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -37,7 +43,7 @@ func GetItemList(date string, categories map[string]bool) []Item {
 	ids := []int{}
 	for rows.Next() {
 		var item Item
-		err := rows.Scan(&item.ID, &item.Category, &item.Name, &item.Weight)
+		err := rows.Scan(&item.ID, &item.Category, &item.Name, &item.Weight, &item.EventDate)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -65,6 +71,12 @@ func GetItemList(date string, categories map[string]bool) []Item {
 				log.Fatal(err)
 			}
 		}
+	}
+
+	cmd = "UPDATE Items SET weight = weight - 10 WHERE event_date = $1"
+	_, err = db.Exec(cmd, date)
+	if err != nil{
+		log.Fatal(err)
 	}
 
 	return items

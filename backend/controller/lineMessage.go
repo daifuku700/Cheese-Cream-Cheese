@@ -15,7 +15,7 @@ import (
 func Line(c *gin.Context) {
 	t := time.Now()
 
-	date := t.Format("2006-01-02")
+	date := t.Format("0000-00-00")
 
 	err := godotenv.Load()
 	if err != nil {
