@@ -16,7 +16,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme:
+            ColorScheme.fromSeed(seedColor: Color(0xFFEFF8FF).withOpacity(1)),
         useMaterial3: true,
       ),
       home: const MainPage(title: 'Flutter Demo Home Page'),
@@ -63,7 +64,7 @@ class _MainPageState extends State<MainPage> {
 
       //下のナビゲーションバー
       bottomNavigationBar: CurvedNavigationBar(
-        color: Colors.black,
+        color: const Color(0xFFA4D4FF),
         backgroundColor: const Color(0xFFEFF8FF),
         index: index,
         animationDuration: const Duration(milliseconds: 800),
