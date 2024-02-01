@@ -251,7 +251,8 @@ class _HomePageState extends State<HomePage> {
                                     vertical: 5, horizontal: 10),
                                 height: 20,
                                 decoration: BoxDecoration(
-                                  color: getColorForSummary(events[index]["summary"]),
+                                  color: getColorForSummary(
+                                      events[index]["summary"]),
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                                 child: Center(
@@ -287,8 +288,8 @@ class _HomePageState extends State<HomePage> {
                         (weather["text"] == null)
                             ? "assets/home_page/loading.gif"
                             : getImagePath(weather["text"]),
-                        width: 50,
-                        height: 50,
+                        width: 110,
+                        height: 110,
                       ),
                     ),
                   ),
@@ -422,9 +423,9 @@ class _HomePageState extends State<HomePage> {
             Container(
               margin: const EdgeInsets.only(bottom: 30),
               child: const Text(
-                '今日も一日頑張りましょう！',
+                'いってらっしゃい！',
                 style: TextStyle(
-                  fontSize: 25,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
