@@ -32,7 +32,6 @@ class _SchedulePageState extends State<SchedulePage> {
     super.dispose();
   }
 
-
   Future<void> fetchData() async {
     http.Response response =
         await http.get(Uri.parse('http://localhost:8080/ccc/calendar'));
@@ -76,7 +75,7 @@ class _SchedulePageState extends State<SchedulePage> {
        * ! item['items']でちゃんとアクセスできるようになっている。
        * TODO このあとグルーピングしてくださいな！！！
        */
-      print(item["items"]);
+      print(item["items"][0]["name"]);
       if (!groupedItems.containsKey(item['date'])) {
         // groupedItems[item['date']] = item['items'];
       } else {
@@ -176,7 +175,7 @@ class _SchedulePageState extends State<SchedulePage> {
                 var dateString = DateFormat('yyyy-MM-dd').format(date);
                 if (groupedEvents.containsKey(dateString)) {
                   var eventsOnDate = groupedEvents[dateString];
-                  var itemsOnDate = groupedItems[dateString];
+                  //var itemsOnDate = groupedItems[dateString];
                   return Container(
                     margin: EdgeInsets.symmetric(
                         horizontal: 20, vertical: 10), // Added vertical margin
@@ -221,16 +220,20 @@ class _SchedulePageState extends State<SchedulePage> {
                               ),
                             ),
                           //持ち物を表示
-                          Center(
-                            child: Text(
-                              '持ち物', // Add your text here
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.normal,
+                          for (var item in jsonData)
+                            if (item["date"] == dateString &&
+                                item["items"] != null)
+                              Center(
+                                child: Text(
+                                  item["items"][0]["name"].toString(),
+                                  // Add your text here
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
 
                           // Expanded(
                           //   // イベントを全て探索
