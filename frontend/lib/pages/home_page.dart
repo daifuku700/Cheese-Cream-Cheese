@@ -148,6 +148,25 @@ class _HomePageState extends State<HomePage> {
           ));
     }
 
+    Color getColorForSummary(String summary) {
+      switch (summary) {
+        case "授業":
+          return const Color(0xFFA9CF58); // Green
+        case "バイト":
+          return const Color(0xFFFFC107); // Yellow
+        case "打ち上げ":
+          return const Color(0xFFFF7575); // Pink
+        case "試験":
+          return const Color(0xFF75CDFF); // Blue
+        case "飲み会":
+          return const Color(0xFFFF7575); // Orange
+        case "MTG":
+          return const Color(0xFFD39CFF); // Purple
+        default:
+          return Colors.grey; // Default color for unknown summary
+      }
+    }
+
     displayed = false;
     return Scaffold(
       backgroundColor: const Color(0xFFEFF8FF),
@@ -232,9 +251,7 @@ class _HomePageState extends State<HomePage> {
                                     vertical: 5, horizontal: 10),
                                 height: 20,
                                 decoration: BoxDecoration(
-                                  color: index % 2 == 0
-                                      ? const Color(0xFFA9CF58)
-                                      : const Color(0xFF75CDFF),
+                                  color: getColorForSummary(events[index]["summary"]),
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                                 child: Center(
@@ -405,7 +422,11 @@ class _HomePageState extends State<HomePage> {
             Container(
               margin: const EdgeInsets.only(bottom: 30),
               child: const Text(
-                'いってらっしゃい！',
+                '今日も一日頑張りましょう！',
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             )
           ],
