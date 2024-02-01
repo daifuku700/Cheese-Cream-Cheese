@@ -126,7 +126,49 @@ class _SchedulePageState extends State<SchedulePage> {
       }
     }
 
+    //持ち物削除する時の関数
+    Future<void> remItem(String name) async {
+      const String url = 'http://localhost:8080/ccc/deleteDB';
+
+      // Example payload for the request
+      final Map<String, dynamic> payload = {
+        "category": 'exam',
+        "name": name,
+        "weight": -1,
+      };
+
+      try {
+        final response = await http.post(
+          Uri.parse(url),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: jsonEncode(payload),
+        );
+
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          // Consider checking for other success status codes if applicable
+          print('Item removed successfully');
+        } else {
+          print('Failed to remove item. Status code: ${response.statusCode}');
+          print('Response body: ${response.body}');
+          // You might want to log the response body for additional information
+          throw Exception('Failed to remove item.');
+        }
+      } catch (error) {
+        print('Error removing item: $error');
+        // Handle any other errors
+      }
+    }
+
+    //持ち物追加のポップアップでの追加処理
     void add() {
+      Navigator.of(context).pop(controller.text);
+      controller.clear();
+    }
+
+    //持ち物削除のポップアップでの追加処理
+    void rem() {
       Navigator.of(context).pop(controller.text);
       controller.clear();
     }
@@ -135,7 +177,7 @@ class _SchedulePageState extends State<SchedulePage> {
     Future<String?> openDialog() => showDialog<String>(
           context: context,
           builder: (context) => AlertDialog(
-              title: const Text('持ち物追加'),
+              title: const Text('追加したいもの'),
               content: TextField(
                 decoration: const InputDecoration(),
                 controller: controller,
@@ -143,6 +185,21 @@ class _SchedulePageState extends State<SchedulePage> {
               ),
               actions: [
                 TextButton(onPressed: add, child: const Text('Submit')),
+              ]),
+        );
+
+    //持ち物削除のポップアップ
+    Future<String?> openDialog2() => showDialog<String>(
+          context: context,
+          builder: (context) => AlertDialog(
+              title: const Text('削除したいもの'),
+              content: TextField(
+                decoration: const InputDecoration(),
+                controller: controller,
+                onSubmitted: (_) => rem,
+              ),
+              actions: [
+                TextButton(onPressed: rem, child: const Text('Submit')),
               ]),
         );
 
@@ -185,59 +242,93 @@ class _SchedulePageState extends State<SchedulePage> {
                           Text(dateString,
                               style: const TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold)),
-                          for (var event in eventsOnDate!)
-                            Container(
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 10),
-                              height: 20,
-                              decoration: BoxDecoration(
-                                color:
-                                    getColorForSummary(event['summary'] ?? ''),
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  event['summary'] ?? '予定${index + 1}',
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                          //持ち物を表示
-                          for (var item in jsonData)
-                            if (item["date"] == dateString &&
-                                item["items"] != null &&
-                                !usedDates.contains(dateString) &&
-                                usedDates.add(dateString))
-                              Center(
+                          Row(
+                            children: [
+                              Expanded(
                                 child: Column(
-                                  children: List.generate(item["items"].length,
-                                      (index) {
-                                    return Text(
-                                      dateString +
-                                          item["items"][index]["name"]
-                                              .toString(),
-                                      style: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.normal,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    for (var event in eventsOnDate!)
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            vertical: 5, horizontal: 10),
+                                        height: 20,
+                                        decoration: BoxDecoration(
+                                          color: getColorForSummary(
+                                              event['summary'] ?? ''),
+                                          borderRadius:
+                                              BorderRadius.circular(20.0),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            event['summary'] ??
+                                                '予定${index + 1}',
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
                                       ),
-                                      textAlign: TextAlign.center,
-                                    );
-                                  }),
+                                  ],
                                 ),
-                              )
+                              ),
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    for (var item in jsonData)
+                                      if (item["date"] == dateString &&
+                                          item["items"] != null &&
+                                          !usedDates.contains(dateString) &&
+                                          usedDates.add(dateString))
+                                        Column(
+                                          children: List.generate(
+                                              item["items"].length, (index) {
+                                            return Text(
+                                              item["items"][index]["name"]
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                              textAlign: TextAlign.center,
+                                            );
+                                          }),
+                                        ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.add),
-                        onPressed: () async {
-                          final add = await openDialog();
-                          if (add == null || add.isEmpty) return;
-                          addItem(add);
-                        },
+                      trailing: SizedBox(
+                        height: 56, // 適切な高さに調整してください
+                        child: ListView(
+                          physics:
+                              NeverScrollableScrollPhysics(), // スクロールを無効にする
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal, // 横方向にスクロールする
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.add),
+                              onPressed: () async {
+                                final add = await openDialog();
+                                if (add == null || add.isEmpty) return;
+                                addItem(add);
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.remove),
+                              onPressed: () async {
+                                final rem = await openDialog2();
+                                if (rem == null || rem.isEmpty) return;
+                                remItem(rem);
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
