@@ -184,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.grey.withOpacity(0.5), // Set shadow color
                       spreadRadius: 2, // Set the spread radius of the shadow
                       blurRadius: 5, // Set the blur radius of the shadow
-                      offset: Offset(0, 3), // Set the offset of the shadow
+                      offset: const Offset(0, 3), // Set the offset of the shadow
                     ),
                   ],
                 ),
@@ -200,7 +200,7 @@ class _HomePageState extends State<HomePage> {
                     ),
 
                     //一つ一つの予定
-                    Container(
+                    SizedBox(
                       height: 60,
                       child: Scrollbar(
                         child: ListView.builder(
@@ -218,8 +218,8 @@ class _HomePageState extends State<HomePage> {
                                 height: 20,
                                 decoration: BoxDecoration(
                                   color: index % 2 == 0
-                                      ? Color(0xFFA9CF58)
-                                      : Color(0xFF75CDFF),
+                                      ? const Color(0xFFA9CF58)
+                                      : const Color(0xFF75CDFF),
                                   borderRadius: BorderRadius.circular(20.0),
                                 ),
                                 child: Center(

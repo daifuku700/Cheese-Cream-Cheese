@@ -68,42 +68,24 @@ class _SchedulePageState extends State<SchedulePage> {
       }
     }
 
-    Map<String, List<Map<String, dynamic>>> groupedItems = {};
-    for (var item in jsonData) {
-      /***
-       * ! item['items']でちゃんとアクセスできるようになっている。
-       * TODO このあとグルーピングしてくださいな！！！
-       */
-      print(item);
-      print(item["date"]);
-      for (var i = 0; i < item["items"].length; i++)
-        print(item["items"][i]["name"]);
-      print(item["items"]);
-      if (!groupedItems.containsKey(item['date'])) {
-        // groupedItems[item['date']] = item['items'];
-      } else {
-        // groupedItems[item['date']]?.addAll(item['items']);
-      }
-    }
-
     //controllerをinitializeしなきゃ何故かバグるからここでやっとく
     controller = TextEditingController();
 
     //カテゴリーごとに適切な色を取得するための関数
-    Color _getColorForSummary(String summary) {
+    Color getColorForSummary(String summary) {
       switch (summary) {
         case "授業":
-          return Color(0xFF4CAF50); // Green
+          return const Color(0xFF4CAF50); // Green
         case "バイト":
-          return Color(0xFFFFC107); // Yellow
+          return const Color(0xFFFFC107); // Yellow
         case "打ち上げ":
-          return Color(0xFFE91E63); // Pink
+          return const Color(0xFFE91E63); // Pink
         case "試験":
-          return Color(0xFF2196F3); // Blue
+          return const Color(0xFF2196F3); // Blue
         case "飲み会":
-          return Color(0xFFFF5722); // Orange
+          return const Color(0xFFFF5722); // Orange
         case "MTG":
-          return Color(0xFF9C27B0); // Purple
+          return const Color(0xFF9C27B0); // Purple
         default:
           return Colors.grey; // Default color for unknown summary
       }
@@ -111,7 +93,7 @@ class _SchedulePageState extends State<SchedulePage> {
 
     //持ち物追加する時の関数
     Future<void> addItem(String name) async {
-      final String url = 'http://localhost:8080/ccc/insertDB';
+      const String url = 'http://localhost:8080/ccc/insertDB';
 
       // Example payload for the request
       final Map<String, dynamic> payload = {
@@ -153,25 +135,27 @@ class _SchedulePageState extends State<SchedulePage> {
     Future<String?> openDialog() => showDialog<String>(
           context: context,
           builder: (context) => AlertDialog(
-              title: Text('持ち物追加'),
+              title: const Text('持ち物追加'),
               content: TextField(
-                decoration: InputDecoration(),
+                decoration: const InputDecoration(),
                 controller: controller,
                 onSubmitted: (_) => add,
               ),
               actions: [
-                TextButton(onPressed: add, child: Text('Submit')),
+                TextButton(onPressed: add, child: const Text('Submit')),
               ]),
         );
 
+    Set<String> usedDates = {};
+
     return Scaffold(
-      backgroundColor: Color(0xFFEFF8FF),
+      backgroundColor: const Color(0xFFEFF8FF),
       body: SingleChildScrollView(
         child: Column(
           children: [
             ListView.builder(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: next7Days.length,
               itemBuilder: (context, index) {
                 var date = next7Days[index];
@@ -180,7 +164,7 @@ class _SchedulePageState extends State<SchedulePage> {
                   var eventsOnDate = groupedEvents[dateString];
                   //var itemsOnDate = groupedItems[dateString];
                   return Container(
-                    margin: EdgeInsets.symmetric(
+                    margin: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 10), // Added vertical margin
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -190,7 +174,7 @@ class _SchedulePageState extends State<SchedulePage> {
                           color: Colors.grey.withOpacity(0.5),
                           spreadRadius: 2,
                           blurRadius: 5,
-                          offset: Offset(0, 3),
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
@@ -199,7 +183,7 @@ class _SchedulePageState extends State<SchedulePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(dateString,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold)),
                           for (var event in eventsOnDate!)
                             Container(
@@ -208,13 +192,13 @@ class _SchedulePageState extends State<SchedulePage> {
                               height: 20,
                               decoration: BoxDecoration(
                                 color:
-                                    _getColorForSummary(event['summary'] ?? ''),
+                                    getColorForSummary(event['summary'] ?? ''),
                                 borderRadius: BorderRadius.circular(20.0),
                               ),
                               child: Center(
                                 child: Text(
                                   event['summary'] ?? '予定${index + 1}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 15,
                                     fontWeight: FontWeight.normal,
                                   ),
@@ -225,7 +209,9 @@ class _SchedulePageState extends State<SchedulePage> {
                           //持ち物を表示
                           for (var item in jsonData)
                             if (item["date"] == dateString &&
-                                item["items"] != null)
+                                item["items"] != null &&
+                                !usedDates.contains(dateString) &&
+                                usedDates.add(dateString))
                               Center(
                                 child: Column(
                                   children: List.generate(item["items"].length,
@@ -234,7 +220,7 @@ class _SchedulePageState extends State<SchedulePage> {
                                       dateString +
                                           item["items"][index]["name"]
                                               .toString(),
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.normal,
                                       ),
@@ -243,63 +229,10 @@ class _SchedulePageState extends State<SchedulePage> {
                                   }),
                                 ),
                               )
-
-                          // Expanded(
-                          //   // イベントを全て探索
-                          //   child: ListView.builder(
-                          //     itemCount: events.length,
-                          //     itemBuilder: (context, index) {
-                          //       // 今日の日付のイベント＆まだ一回も出力してない場合のみアイテムを出力
-                          //       if (dateString == events[index]['date'] && events[index]['items'] != null) {
-                          //         return Column(
-                          //           children: [
-                          //             // イベントのアイテムを出力する
-                          //             GridView.builder(
-                          //               gridDelegate:
-                          //                   SliverGridDelegateWithFixedCrossAxisCount(
-                          //                 crossAxisCount: 2,
-                          //                 mainAxisSpacing:
-                          //                     5.0, // Adjust main axis spacing
-                          //                 crossAxisSpacing:
-                          //                     5.0, // Adjust cross axis spacing
-                          //               ),
-                          //               shrinkWrap: true,
-                          //               physics: const ClampingScrollPhysics(),
-                          //               itemCount:
-                          //                   events[index]['items']!.length,
-                          //               itemBuilder: (context, itemIndex) {
-                          //                 final item =
-                          //                     events[index]['items']![itemIndex];
-
-                          //                 return Container(
-                          //                   margin: const EdgeInsets.symmetric(
-                          //                       horizontal: 15),
-                          //                   height: 5,
-                          //                   width: 5,
-                          //                   color: Colors.white,
-                          //                   child: Text(
-                          //                     item['name'].toString() ?? '',
-                          //                     style: TextStyle(
-                          //                       fontSize: 20,
-                          //                       fontWeight: FontWeight.normal,
-                          //                     ),
-                          //                     textAlign: TextAlign.center,
-                          //                   ),
-                          //                 );
-                          //               },
-                          //             ),
-                          //           ],
-                          //         );
-                          //       } else {
-                          //         return Container(); // Return an empty container for events not matching today's date
-                          //       }
-                          //     },
-                          //   ),
-                          // ),
                         ],
                       ),
                       trailing: IconButton(
-                        icon: Icon(Icons.add),
+                        icon: const Icon(Icons.add),
                         onPressed: () async {
                           final add = await openDialog();
                           if (add == null || add.isEmpty) return;
@@ -313,7 +246,7 @@ class _SchedulePageState extends State<SchedulePage> {
                 }
               },
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
           ],
         ),
       ),

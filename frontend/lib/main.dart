@@ -36,8 +36,8 @@ class _MainPageState extends State<MainPage> {
   //画面推移に使う関数・配列
   int index = 0;
   final screens = [
-    HomePage(),
-    SchedulePage(),
+    const HomePage(),
+    const SchedulePage(),
   ];
   final display = ['Home', 'Schedule'];
 
@@ -46,12 +46,12 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       //上のバー
       appBar: AppBar(
-        backgroundColor: Color(0xFFEFF8FF),
+        backgroundColor: const Color(0xFFEFF8FF),
         centerTitle: false,
         title: Text(
           display[index],
           textAlign: TextAlign.left,
-          style: TextStyle(
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 30,
           ),
@@ -64,11 +64,11 @@ class _MainPageState extends State<MainPage> {
       //下のナビゲーションバー
       bottomNavigationBar: CurvedNavigationBar(
         color: Colors.black,
-        backgroundColor: Color(0xFFEFF8FF),
+        backgroundColor: const Color(0xFFEFF8FF),
         index: index,
         animationDuration: const Duration(milliseconds: 800),
         onTap: (index) => setState(() => this.index = index),
-        items: [
+        items: const [
           Icon(
             Icons.home,
             color: Colors.white,
