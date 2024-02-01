@@ -4,20 +4,22 @@ import 'package:flutter/material.dart';
 import 'pages/schedule_page.dart';
 import 'pages/home_page.dart';
 
+
 void main() {
   runApp(const MyApp());
 }
 
 //このアプリのテーマみたいなのを決められるやつ
 class MyApp extends StatelessWidget {
+
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme:
-            ColorScheme.fromSeed(seedColor: const Color(0xFFEFF8FF).withOpacity(1)),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color(0xFFEFF8FF).withOpacity(1)),
         useMaterial3: true,
       ),
       home: const MainPage(title: 'Flutter Demo Home Page'),
@@ -57,6 +59,8 @@ class _MainPageState extends State<MainPage> {
             fontSize: 30,
           ),
         ),
+        elevation: 0,
+        scrolledUnderElevation: 0.0,
       ),
 
       //中身（各自のページファイルでいじる）
