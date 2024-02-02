@@ -106,7 +106,7 @@ class _SchedulePageState extends State<SchedulePage> {
     }
 
     //持ち物追加する時の関数
-    Future<void> addItem(String name, String category) async {
+    Future<void> addItem(String name, String date, String? category) async {
       const String url = 'http://localhost:8080/ccc/insertDB';
 
       // Example payload for the request
@@ -114,6 +114,7 @@ class _SchedulePageState extends State<SchedulePage> {
         "category": category,
         "name": name,
         "weight": 3,
+        "event_date": date
       };
 
       try {
@@ -188,8 +189,18 @@ class _SchedulePageState extends State<SchedulePage> {
     }
 
     //持ち物追加のポップアップ
-    String? addCat; // 追加するアイテムのカテゴリー
-    Future<String?> openDialog() => showDialog<String>(
+    const List<String> categories = [
+      'exam',
+      'class',
+      'party',
+      'trip',
+      'job',
+      'mtg',
+      'other'
+    ];
+    String? assignCate = categories.first; // 追加するアイテムのカテゴリー
+    String newItem = "";
+    Future<void> openDialog(String date) => showDialog(
           context: context,
           builder: (context) => AlertDialog(
               title: const Text('追加したいもの'),
@@ -200,36 +211,30 @@ class _SchedulePageState extends State<SchedulePage> {
                   TextField(
                     decoration: const InputDecoration(),
                     controller: controller,
+                    onChanged: (text) => newItem = text,
                     onSubmitted: (_) => add(),
                   ),
-                  DropdownButton<String>(
-                    value: addCat,
-                    items: <String>[
-                      'exam',
-                      'class',
-                      'party',
-                      'trip',
-                      'job',
-                      'mtg',
-                      'other'
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
+                  DropdownMenu<String>(
+                    initialSelection: categories.first,
+                    onSelected: (String? newValue) {
                       setState(() {
-                        addCat = newValue; // カテゴリーを更新
+                        assignCate = newValue!; // カテゴリーを更新
                       });
                     },
+                    dropdownMenuEntries: categories
+                        .map<DropdownMenuEntry<String>>((String value) {
+                      return DropdownMenuEntry<String>(
+                        value: value,
+                        label: value,
+                      );
+                    }).toList(),
                   ),
-                  //選択されたカテゴリを表示
-                  if (addCat != null) Text('選択されたカテゴリ: $addCat'),
                 ],
               ),
               actions: [
-                TextButton(onPressed: () => add(), child: const Text('Submit')),
+                TextButton(
+                    onPressed: () => {addItem(newItem, date, assignCate), add()},
+                    child: const Text('Submit')),
               ]),
         );
 
@@ -358,13 +363,8 @@ class _SchedulePageState extends State<SchedulePage> {
                           children: [
                             IconButton(
                               icon: const Icon(Icons.add),
-                              onPressed: () async {
-                                final addIt = await openDialog();
-                                final addCat = await openDialog();
-                                if (addIt == null ||
-                                    addIt.isEmpty ||
-                                    addCat == null) return;
-                                addItem(addIt, addCat);
+                              onPressed: () {
+                                openDialog(dateString);
                               },
                             ),
                             IconButton(
