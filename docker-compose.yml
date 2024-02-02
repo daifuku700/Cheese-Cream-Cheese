@@ -1,0 +1,13 @@
+version: "3"
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: "../docker/backend/Dockerfile"
+    container_name: golang
+    volumes:
+      - ./backend:/app
+    tty: true
+    command: go run main.go
+    ports:
+      - "8080:8080"
