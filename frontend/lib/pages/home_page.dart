@@ -248,7 +248,7 @@ class _HomePageState extends State<HomePage> {
                                 eventDate.day == currentDate.day) {
                               return Container(
                                 margin: const EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 10),
+                                    vertical: 5, horizontal: 15),
                                 height: 20,
                                 decoration: BoxDecoration(
                                   color: getColorForSummary(
@@ -399,13 +399,24 @@ class _HomePageState extends State<HomePage> {
                                       height: 5,
                                       width: 5,
                                       color: Colors.white,
-                                      child: Text(
-                                        item['name'] ?? '',
-                                        style: const TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                        textAlign: TextAlign.center,
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.check, // 任意のアイコンを指定してください
+                                            color:
+                                                Colors.black, // アイコンの色を設定してください
+                                          ),
+                                          SizedBox(width: 8),
+                                          Text(
+                                            item['name'] ?? '',
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          // アイコンとテキストの間隔を設定します
+                                        ],
                                       ),
                                     );
                                   },
