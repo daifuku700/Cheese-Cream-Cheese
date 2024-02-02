@@ -177,7 +177,8 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               flex: 1,
               child: Container(
-                  margin: const EdgeInsets.all(15.0),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20.0),
@@ -234,8 +235,7 @@ class _HomePageState extends State<HomePage> {
                     ),
 
                     //一つ一つの予定
-                    SizedBox(
-                      height: 60,
+                    Expanded(
                       child: Scrollbar(
                         child: ListView.builder(
                           itemCount: events.length,
@@ -368,6 +368,7 @@ class _HomePageState extends State<HomePage> {
                     Expanded(
                       // イベントを全て探索
                       child: ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
                         itemCount: events.length,
                         itemBuilder: (context, index) {
                           // 今日の日付のイベント＆まだ一回も出力してない場合のみアイテムを出力
@@ -377,13 +378,14 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 // イベントのアイテムを出力する
                                 GridView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
                                   gridDelegate:
                                       const SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 3,
                                     mainAxisSpacing:
-                                        0.0, // Adjust main axis spacing
+                                        20, // Adjust main axis spacing
                                     crossAxisSpacing:
-                                        5.0, // Adjust cross axis spacing
+                                        10.0, // Adjust cross axis spacing
                                     childAspectRatio: 4.5,
                                   ),
                                   shrinkWrap: true,
