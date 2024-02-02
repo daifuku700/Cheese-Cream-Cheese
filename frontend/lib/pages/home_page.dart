@@ -379,14 +379,14 @@ class _HomePageState extends State<HomePage> {
                                 GridView.builder(
                                   gridDelegate:
                                       const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
+                                    crossAxisCount: 3,
                                     mainAxisSpacing:
-                                        5.0, // Adjust main axis spacing
+                                        0.0, // Adjust main axis spacing
                                     crossAxisSpacing:
                                         5.0, // Adjust cross axis spacing
+                                    childAspectRatio: 4.5,
                                   ),
                                   shrinkWrap: true,
-                                  physics: const ClampingScrollPhysics(),
                                   itemCount: events[index]['items'].length,
                                   itemBuilder: (context, itemIndex) {
                                     final item =
@@ -425,7 +425,7 @@ class _HomePageState extends State<HomePage> {
               child: const Text(
                 'いってらっしゃい！',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
                 ),
               ),
