@@ -59,8 +59,8 @@ type Weather []struct {
 }
 
 func WeatherPost(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"message": "error",
+	c.JSON(400, gin.H{
+		"message": "not implemented yet.",
 	})
 }
 
@@ -68,11 +68,11 @@ func WeatherGet(c *gin.Context) {
 	area, weather_code, text, temp_min, temp_max, temp_min_tomorrow, temp_max_tomorrow := formatWeather()
 
 	c.JSON(200, gin.H{
-		"area": area,
-		"weather_code": weather_code,
-		"text": text,
-		"temp_min": temp_min,
-		"temp_max": temp_max,
+		"area":              area,
+		"weather_code":      weather_code,
+		"text":              text,
+		"temp_min":          temp_min,
+		"temp_max":          temp_max,
 		"temp_min_tomorrow": temp_min_tomorrow,
 		"temp_max_tomorrow": temp_max_tomorrow,
 	})
@@ -112,9 +112,13 @@ func formatWeather() (string, string, string, string, string, string, string) {
 	text := (*weather)[0].TimeSeries[0].Areas[0].Weathers[0]
 	text = strings.ReplaceAll(text, "　", "")
 	temp_min := (*weather)[1].TimeSeries[1].Areas[0].TempsMin[0]
-	temp_min_tomorrow := (*weather)[1].TimeSeries[1].Areas[0].TempsMin[1]
+	temp_min_tomorrow := (*weather)[0].TimeSeries[2].Areas[0].Temps[0]
 	temp_max := (*weather)[1].TimeSeries[1].Areas[0].TempsMax[0]
-	temp_max_tomorrow := (*weather)[1].TimeSeries[1].Areas[0].TempsMax[1]
+	temp_max_tomorrow := (*weather)[0].TimeSeries[2].Areas[0].Temps[1]
+
+	if temp_max_tomorrow < temp_min_tomorrow {
+		temp_max_tomorrow, temp_min_tomorrow = temp_min_tomorrow, temp_max_tomorrow
+	}
 
 	return area, weather_code, text, temp_min, temp_max, temp_min_tomorrow, temp_max_tomorrow
 }
