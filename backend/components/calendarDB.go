@@ -43,14 +43,19 @@ func GetCalendarDB(date string) []string {
 	defer db_items.Close()
 
 	for i := 1; i <= 6; i++ {
-		var id int
+		id := 0
 		cmd := "SELECT id" + strconv.Itoa(i) + " FROM Calendars WHERE date = $1"
 		err = db_calendar.QueryRow(cmd, date).Scan(&id)
 		if err != nil {
-			log.Fatal(err)
+			if id == 0 {
+				log.Fatal("No data for " + date)
+				return items
+			} else {
+				log.Fatal(err)
+			}
 		}
-		if (id == 0) {
-			break;
+		if id == 0 {
+			break
 		}
 		var item string
 		cmd = "SELECT name FROM Items WHERE id = $1"
