@@ -64,6 +64,12 @@ func UpdateDB(c *gin.Context) {
 	}
 	if item.Weight >= 0 {
 		weight = item.Weight
+	} else {
+		if weight > 0 {
+			weight = weight - 1
+		} else {
+			weight = 0
+		}
 	}
 	if item.EventDate != "" {
 		eventDate = item.EventDate
