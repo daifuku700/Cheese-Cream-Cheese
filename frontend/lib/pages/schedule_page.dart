@@ -233,7 +233,8 @@ class _SchedulePageState extends State<SchedulePage> {
               ),
               actions: [
                 TextButton(
-                    onPressed: () => {addItem(newItem, date, assignCate), add()},
+                    onPressed: () =>
+                        {addItem(newItem, date, assignCate), add()},
                     child: const Text('Submit')),
               ]),
         );
