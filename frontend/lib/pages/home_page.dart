@@ -19,6 +19,9 @@ class _HomePageState extends State<HomePage> {
   Map<String, dynamic> weather = {};
   bool displayed = false;
   bool loading = false;
+  //for check box
+  static const int _count = 6;
+  final List<bool?> _checks = List.generate(_count, (_) => false);
 
   DateTime currentDate = DateTime.now();
   @override
@@ -394,23 +397,22 @@ class _HomePageState extends State<HomePage> {
                                     final item =
                                         events[index]['items'][itemIndex];
                                     return Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 15),
                                       height: 5,
                                       width: 5,
                                       color: Colors.white,
                                       child: Row(
                                         children: [
-                                          Icon(
-                                            Icons.check, // 任意のアイコンを指定してください
-                                            color:
-                                                Colors.black, // アイコンの色を設定してください
+                                          // Initial state of the checkbox
+                                          Checkbox(
+                                            value: _checks[itemIndex],
+                                            onChanged: (newValue) => setState(
+                                                () => _checks[itemIndex] =
+                                                    newValue),
                                           ),
-                                          SizedBox(width: 8),
                                           Text(
                                             item['name'] ?? '',
                                             style: const TextStyle(
-                                              fontSize: 20,
+                                              fontSize: 15,
                                               fontWeight: FontWeight.normal,
                                             ),
                                             textAlign: TextAlign.center,

@@ -72,7 +72,7 @@ class _SchedulePageState extends State<SchedulePage> {
         groupedEvents[event['date']]?.add(event);
       }
     }
-
+    //loading画面をカッコよくするやつ
     if (loading) {
       return Scaffold(
           backgroundColor: Color(0xFFEFF8FF),
@@ -106,7 +106,7 @@ class _SchedulePageState extends State<SchedulePage> {
     }
 
     //持ち物追加する時の関数
-    Future<void> addItem(String name, String category) async {
+    Future<void> addItem(String name, String category, String date) async {
       const String url = 'http://localhost:8080/ccc/insertDB';
 
       // Example payload for the request
@@ -114,6 +114,7 @@ class _SchedulePageState extends State<SchedulePage> {
         "category": category,
         "name": name,
         "weight": 3,
+        "event_date": date,
       };
 
       try {
@@ -140,59 +141,18 @@ class _SchedulePageState extends State<SchedulePage> {
       }
     }
 
-    //持ち物削除する時の関数
-    Future<void> remItem(String name) async {
-      const String url = 'http://localhost:8080/ccc/deleteDB';
-
-      // Example payload for the request
-      final Map<String, dynamic> payload = {
-        "category": 'exam',
-        "name": name,
-        "weight": -1,
-      };
-
-      try {
-        final response = await http.post(
-          Uri.parse(url),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: jsonEncode(payload),
-        );
-
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          // Consider checking for other success status codes if applicable
-          print('Item removed successfully');
-        } else {
-          print('Failed to remove item. Status code: ${response.statusCode}');
-          print('Response body: ${response.body}');
-          // You might want to log the response body for additional information
-          throw Exception('Failed to remove item.');
-        }
-      } catch (error) {
-        print('Error removing item: $error');
-        // Handle any other errors
-      }
-    }
-
     //持ち物追加のポップアップでの追加処理
     void add() {
       Navigator.of(context).pop(controller.text);
       controller.clear();
     }
 
-    //持ち物削除のポップアップでの追加処理
-    void rem() {
-      Navigator.of(context).pop(controller.text);
-      controller.clear();
-    }
-
     //持ち物追加のポップアップ
-    String? addCat; // 追加するアイテムのカテゴリー
+
     Future<String?> openDialog() => showDialog<String>(
           context: context,
           builder: (context) => AlertDialog(
-              title: const Text('追加したいもの'),
+              title: const Text('持ち物追加'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -202,49 +162,34 @@ class _SchedulePageState extends State<SchedulePage> {
                     controller: controller,
                     onSubmitted: (_) => add(),
                   ),
-                  DropdownButton<String>(
-                    value: addCat,
-                    items: <String>[
-                      'exam',
-                      'class',
-                      'party',
-                      'trip',
-                      'job',
-                      'mtg',
-                      'other'
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        addCat = newValue; // カテゴリーを更新
-                      });
-                    },
-                  ),
+                  // DropdownButton<String>(
+                  //   value: addCat,
+                  //   items: <String>[
+                  //     'exam',
+                  //     'class',
+                  //     'party',
+                  //     'trip',
+                  //     'job',
+                  //     'mtg',
+                  //     'other'
+                  //   ].map<DropdownMenuItem<String>>((String value) {
+                  //     return DropdownMenuItem<String>(
+                  //       value: value,
+                  //       child: Text(value),
+                  //     );
+                  //   }).toList(),
+                  //   onChanged: (String? newValue) {
+                  //     setState(() {
+                  //       addCat = newValue; // カテゴリーを更新
+                  //     });
+                  //   },
+                  // ),
                   //選択されたカテゴリを表示
-                  if (addCat != null) Text('選択されたカテゴリ: $addCat'),
+                  // if (addCat != null) Text('選択されたカテゴリ: $addCat'),
                 ],
               ),
               actions: [
                 TextButton(onPressed: () => add(), child: const Text('Submit')),
-              ]),
-        );
-
-    //持ち物削除のポップアップ
-    Future<String?> openDialog2() => showDialog<String>(
-          context: context,
-          builder: (context) => AlertDialog(
-              title: const Text('削除したいもの'),
-              content: TextField(
-                decoration: const InputDecoration(),
-                controller: controller,
-                onSubmitted: (_) => rem,
-              ),
-              actions: [
-                TextButton(onPressed: rem, child: const Text('Submit')),
               ]),
         );
 
@@ -360,20 +305,14 @@ class _SchedulePageState extends State<SchedulePage> {
                               icon: const Icon(Icons.add),
                               onPressed: () async {
                                 final addIt = await openDialog();
-                                final addCat = await openDialog();
-                                if (addIt == null ||
-                                    addIt.isEmpty ||
-                                    addCat == null) return;
-                                addItem(addIt, addCat);
+                                if (addIt == null || addIt.isEmpty) return;
+                                addItem(addIt, "exam", "2024-02-02");
+                                print(addIt);
                               },
                             ),
                             IconButton(
                               icon: const Icon(Icons.remove),
-                              onPressed: () async {
-                                final rem = await openDialog2();
-                                if (rem == null || rem.isEmpty) return;
-                                remItem(rem);
-                              },
+                              onPressed: () async {},
                             ),
                           ],
                         ),
