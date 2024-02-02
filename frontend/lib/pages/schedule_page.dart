@@ -203,7 +203,7 @@ class _SchedulePageState extends State<SchedulePage> {
     Future<void> openDialog(String date) => showDialog(
           context: context,
           builder: (context) => AlertDialog(
-              title: const Text('追加したいもの'),
+              title: const Text('持ち物追加'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,6 +214,7 @@ class _SchedulePageState extends State<SchedulePage> {
                     onChanged: (text) => newItem = text,
                     onSubmitted: (_) => add(),
                   ),
+                  SizedBox(height: 20), //スペースを作る用
                   DropdownMenu<String>(
                     initialSelection: categories.first,
                     onSelected: (String? newValue) {
@@ -233,8 +234,11 @@ class _SchedulePageState extends State<SchedulePage> {
               ),
               actions: [
                 TextButton(
-                    onPressed: () =>
-                        {addItem(newItem, date, assignCate), add()},
+                    onPressed: () {
+                      addItem(newItem, date, assignCate);
+                      add();
+                      fetchData();
+                    },
                     child: const Text('Submit')),
               ]),
         );
