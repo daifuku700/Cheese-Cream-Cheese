@@ -445,7 +445,8 @@ class _HomePageState extends State<HomePage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            )
+            ),
+            Expanded(flex: 1, child: Container())
           ],
         ),
       ),

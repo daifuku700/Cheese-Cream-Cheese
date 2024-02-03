@@ -48,6 +48,8 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //したを透明にする魔法
+      extendBody: true,
       //上のバー
       appBar: AppBar(
         backgroundColor: const Color(0xFFEFF8FF),
@@ -70,7 +72,7 @@ class _MainPageState extends State<MainPage> {
       //下のナビゲーションバー
       bottomNavigationBar: CurvedNavigationBar(
         color: const Color(0xFFA4D4FF),
-        backgroundColor: const Color(0xFFEFF8FF),
+        backgroundColor: Colors.transparent,
         index: index,
         animationDuration: const Duration(milliseconds: 600),
         onTap: (index) => setState(() => this.index = index),
