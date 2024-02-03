@@ -9,6 +9,8 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+
+	"strconv"
 )
 
 type Weather []struct {
@@ -107,18 +109,31 @@ func formatWeather() (string, string, string, string, string, string, string) {
 		log.Fatal(err)
 	}
 
+	temps := (*weather)[0].TimeSeries[2].Areas[0].Temps
+
+	temp_min_tomorrow := 100
+	temp_max_tomorrow := -100
+
+	for i := 0; i < len(temps); i++ {
+		temp, _ := strconv.Atoi(temps[i])
+		if temp_min_tomorrow > temp {
+			temp_min_tomorrow = temp
+		}
+		if temp_max_tomorrow < temp {
+			temp_max_tomorrow = temp
+		}
+	}
+
 	area := (*weather)[1].TimeSeries[1].Areas[0].Area.Name
 	weather_code := (*weather)[0].TimeSeries[0].Areas[0].WeatherCodes[0]
 	text := (*weather)[0].TimeSeries[0].Areas[0].Weathers[0]
 	text = strings.ReplaceAll(text, "　", "")
 	temp_min := (*weather)[1].TimeSeries[1].Areas[0].TempsMin[0]
-	temp_min_tomorrow := (*weather)[0].TimeSeries[2].Areas[0].Temps[0]
 	temp_max := (*weather)[1].TimeSeries[1].Areas[0].TempsMax[0]
-	temp_max_tomorrow := (*weather)[0].TimeSeries[2].Areas[0].Temps[1]
 
 	if temp_max_tomorrow < temp_min_tomorrow {
 		temp_max_tomorrow, temp_min_tomorrow = temp_min_tomorrow, temp_max_tomorrow
 	}
 
-	return area, weather_code, text, temp_min, temp_max, temp_min_tomorrow, temp_max_tomorrow
+	return area, weather_code, text, temp_min, temp_max, strconv.Itoa(temp_min_tomorrow), strconv.Itoa(temp_max_tomorrow)
 }
