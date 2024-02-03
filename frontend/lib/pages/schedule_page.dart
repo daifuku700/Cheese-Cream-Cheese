@@ -203,7 +203,9 @@ class _SchedulePageState extends State<SchedulePage> {
     Future<void> openDialog(String date) => showDialog(
           context: context,
           builder: (context) => AlertDialog(
-              title: const Text('持ち物追加'),
+              title: const Text('持ち物追加',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,6 +219,7 @@ class _SchedulePageState extends State<SchedulePage> {
                   SizedBox(height: 20), //スペースを作る用
                   DropdownMenu<String>(
                     initialSelection: categories.first,
+                    label: const Text('Category'),
                     onSelected: (String? newValue) {
                       setState(() {
                         assignCate = newValue!; // カテゴリーを更新

@@ -404,6 +404,7 @@ class _HomePageState extends State<HomePage> {
                                         children: [
                                           // Initial state of the checkbox
                                           Checkbox(
+                                            activeColor: Color(0xFFA4D4FF),
                                             value: _checks[itemIndex],
                                             onChanged: (newValue) => setState(
                                                 () => _checks[itemIndex] =

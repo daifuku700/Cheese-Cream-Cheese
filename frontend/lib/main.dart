@@ -1,17 +1,18 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 import 'pages/schedule_page.dart';
 import 'pages/home_page.dart';
 
-
-void main() {
+Future main() async {
+  await Future.delayed(const Duration(seconds: 1));
+  FlutterNativeSplash.remove();
   runApp(const MyApp());
 }
 
 //このアプリのテーマみたいなのを決められるやつ
 class MyApp extends StatelessWidget {
-
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
