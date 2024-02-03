@@ -105,6 +105,25 @@ class _SchedulePageState extends State<SchedulePage> {
       }
     }
 
+    String getCategory(String category) {
+      switch (category) {
+        case "テスト":
+          return "exam";
+        case "授業":
+          return "class";
+        case "飲み会":
+          return "party";
+        case "旅行":
+          return "trip";
+        case "バイト":
+          return "job";
+        case "ミーティング":
+          return "mtg";
+        default:
+          return "other";
+      }
+    }
+
     //持ち物追加する時の関数
     Future<void> addItem(String name, String date, String? category) async {
       const String url = 'http://localhost:8080/ccc/insertDB';
@@ -142,15 +161,14 @@ class _SchedulePageState extends State<SchedulePage> {
     }
 
     //持ち物削除する時の関数
-    Future<void> remItem(String name) async {
-      const String url = 'http://localhost:8080/ccc/deleteDB';
+    Future<void> deleteItem(String? id) async {
+      const String url = 'http://localhost:8080/ccc/updateDB';
 
       // Example payload for the request
-      final Map<String, dynamic> payload = {
-        "category": 'exam',
-        "name": name,
-        "weight": -1,
-      };
+      if (id == null) {
+        return;
+      }
+      final Map<String, dynamic> payload = {"weight": -1, "id": int.parse(id)};
 
       try {
         final response = await http.post(
@@ -190,17 +208,17 @@ class _SchedulePageState extends State<SchedulePage> {
 
     //持ち物追加のポップアップ
     const List<String> categories = [
-      'exam',
-      'class',
-      'party',
-      'trip',
-      'job',
-      'mtg',
-      'other'
+      'テスト',
+      '授業',
+      '飲み会',
+      '旅行',
+      'バイト',
+      'ミーティング',
+      'その他'
     ];
     String? assignCate = categories.first; // 追加するアイテムのカテゴリー
     String newItem = "";
-    Future<void> openDialog(String date) => showDialog(
+    Future<void> addDialog(String date) => showDialog(
           context: context,
           builder: (context) => AlertDialog(
               title: const Text('持ち物追加',
@@ -216,7 +234,7 @@ class _SchedulePageState extends State<SchedulePage> {
                     onChanged: (text) => newItem = text,
                     onSubmitted: (_) => add(),
                   ),
-                  SizedBox(height: 20), //スペースを作る用
+                  const SizedBox(height: 20), //スペースを作る用
                   DropdownMenu<String>(
                     initialSelection: categories.first,
                     label: const Text('Category'),
@@ -238,6 +256,7 @@ class _SchedulePageState extends State<SchedulePage> {
               actions: [
                 TextButton(
                     onPressed: () {
+                      if (newItem.isEmpty) return;
                       addItem(newItem, date, assignCate);
                       add();
                       fetchData();
@@ -247,21 +266,40 @@ class _SchedulePageState extends State<SchedulePage> {
         );
 
     //持ち物削除のポップアップ
-    Future<String?> openDialog2() => showDialog<String>(
+    String? deleteID = "";
+    Future<String?> deleteDialog(dynamic items) => showDialog<String>(
           context: context,
           builder: (context) => AlertDialog(
               title: const Text('削除したいもの'),
-              content: TextField(
-                decoration: const InputDecoration(),
-                controller: controller,
-                onSubmitted: (_) => rem,
-              ),
+              content: Container(
+                  child: DropdownMenu<String>(
+                      initialSelection: items[0]["name"],
+                      onSelected: (String? value) {
+                        deleteID = value;
+                      },
+                      dropdownMenuEntries:
+                          items.map<DropdownMenuEntry<String>>((dynamic item) {
+                        return DropdownMenuEntry<String>(
+                            value: item["id"].toString(), label: item["name"]);
+                      }).toList())),
               actions: [
-                TextButton(onPressed: rem, child: const Text('Submit')),
+                TextButton(
+                    onPressed: () {
+                      print(deleteID);
+                      if (deleteID == "") {
+                        return;
+                      }
+                      deleteItem(deleteID);
+                      rem();
+                      fetchData();
+                    },
+                    child: const Text('Submit')),
               ]),
         );
 
     Set<String> usedDates = {};
+
+    int index = 0;
 
     return Scaffold(
       backgroundColor: const Color(0xFFEFF8FF),
@@ -372,15 +410,16 @@ class _SchedulePageState extends State<SchedulePage> {
                             IconButton(
                               icon: const Icon(Icons.add),
                               onPressed: () {
-                                openDialog(dateString);
+                                addDialog(dateString);
                               },
                             ),
                             IconButton(
                               icon: const Icon(Icons.remove),
-                              onPressed: () async {
-                                final rem = await openDialog2();
-                                if (rem == null || rem.isEmpty) return;
-                                remItem(rem);
+                              onPressed: () {
+                                while (dateString != jsonData[index]["date"]) {
+                                  index++;
+                                }
+                                deleteDialog(jsonData[index]["items"]);
                               },
                             ),
                           ],
