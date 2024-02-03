@@ -388,7 +388,7 @@ class _HomePageState extends State<HomePage> {
                                     mainAxisSpacing:
                                         20, // Adjust main axis spacing
                                     crossAxisSpacing:
-                                        10.0, // Adjust cross axis spacing
+                                        0, // Adjust cross axis spacing
                                     childAspectRatio: 4.5,
                                   ),
                                   shrinkWrap: true,
@@ -413,7 +413,7 @@ class _HomePageState extends State<HomePage> {
                                           Text(
                                             item['name'] ?? '',
                                             style: const TextStyle(
-                                              fontSize: 15,
+                                              fontSize: 14,
                                               fontWeight: FontWeight.normal,
                                             ),
                                             textAlign: TextAlign.center,
