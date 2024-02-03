@@ -130,7 +130,7 @@ class _SchedulePageState extends State<SchedulePage> {
 
       // Example payload for the request
       final Map<String, dynamic> payload = {
-        "category": category,
+        "category": getCategory(category!),
         "name": name,
         "weight": 3,
         "event_date": date
