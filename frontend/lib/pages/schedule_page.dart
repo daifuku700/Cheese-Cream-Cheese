@@ -270,10 +270,11 @@ class _SchedulePageState extends State<SchedulePage> {
     Future<String?> deleteDialog(dynamic items) => showDialog<String>(
           context: context,
           builder: (context) => AlertDialog(
-              title: const Text('削除したいもの'),
+              title: const Text('持ち物削除'),
               content: Container(
                   child: DropdownMenu<String>(
                       initialSelection: items[0]["name"],
+                      label: const Text('items'),
                       onSelected: (String? value) {
                         deleteID = value;
                       },
