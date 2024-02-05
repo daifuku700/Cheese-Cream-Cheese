@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'HomePageWidgets/home_today.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -24,6 +25,8 @@ class _HomePageState extends State<HomePage> {
   final List<bool?> _checks = List.generate(_count, (_) => false);
 
   DateTime currentDate = DateTime.now();
+
+  String currentDateString = "";
   @override
   void initState() {
     super.initState();
@@ -140,34 +143,37 @@ class _HomePageState extends State<HomePage> {
         currentDate.day == eventDate.day;
   }
 
+  Color getColorForSummary(String summary) {
+    switch (summary) {
+      case "授業":
+        return const Color(0xFFA9CF58); // Green
+      case "バイト":
+        return const Color(0xFFFFC107); // Yellow
+      case "打ち上げ":
+        return const Color(0xFFFF7575); // Pink
+      case "試験":
+        return const Color(0xFF75CDFF); // Blue
+      case "飲み会":
+        return const Color(0xFFFF7575); // Orange
+      case "MTG":
+        return const Color(0xFFD39CFF); // Purple
+      default:
+        return Colors.grey; // Default color for unknown summary
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    currentDateString = _getFormattedDate();
+
+    //ローディング画面
     if (loading) {
       return Scaffold(
-          backgroundColor: Color(0xFFEFF8FF),
+          backgroundColor: const Color(0xFFEFF8FF),
           body: Center(
             child: LoadingAnimationWidget.staggeredDotsWave(
-                color: Color(0xFFA4D4FF), size: 100),
+                color: const Color(0xFFA4D4FF), size: 100),
           ));
-    }
-
-    Color getColorForSummary(String summary) {
-      switch (summary) {
-        case "授業":
-          return const Color(0xFFA9CF58); // Green
-        case "バイト":
-          return const Color(0xFFFFC107); // Yellow
-        case "打ち上げ":
-          return const Color(0xFFFF7575); // Pink
-        case "試験":
-          return const Color(0xFF75CDFF); // Blue
-        case "飲み会":
-          return const Color(0xFFFF7575); // Orange
-        case "MTG":
-          return const Color(0xFFD39CFF); // Purple
-        default:
-          return Colors.grey; // Default color for unknown summary
-      }
     }
 
     displayed = false;
@@ -177,34 +183,9 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: <Widget>[
             //おはよう今日は〇〇の所
-            Expanded(
-              flex: 1,
-              child: Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5), // Set shadow color
-                        spreadRadius: 2, // Set the spread radius of the shadow
-                        blurRadius: 5, // Set the blur radius of the shadow
-                        offset:
-                            const Offset(0, 3), // Set the offset of the shadow
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      'おはよう！\n今日は${_getFormattedDate()}', // Add your text here
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.normal,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  )),
+            HomeToday(
+              currentDateString: currentDateString,
+              homeTodaySize: 1,
             ),
 
             //今日の予定
@@ -239,61 +220,58 @@ class _HomePageState extends State<HomePage> {
 
                     //一つ一つの予定
                     Expanded(
-                      child: Scrollbar(
-                        child: ListView.builder(
-                          itemCount: events.length,
-                          itemBuilder: (context, index) {
-                            //同日の予定しか表示させないための仕組み
-                            DateTime eventDate =
-                                DateTime.parse(events[index]['date']);
-                            if (eventDate.year == currentDate.year &&
-                                eventDate.month == currentDate.month &&
-                                eventDate.day == currentDate.day) {
-                              return Container(
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 15),
-                                height: 20,
-                                decoration: BoxDecoration(
-                                  color: getColorForSummary(
-                                      events[index]["summary"]),
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    events[index]['summary'] ??
-                                        '予定${index + 1}',
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                    textAlign: TextAlign.center,
+                      child: ListView.builder(
+                        itemCount: events.length,
+                        itemBuilder: (context, index) {
+                          //同日の予定しか表示させないための仕組み
+                          DateTime eventDate =
+                              DateTime.parse(events[index]['date']);
+                          if (eventDate.year == currentDate.year &&
+                              eventDate.month == currentDate.month &&
+                              eventDate.day == currentDate.day) {
+                            return Container(
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 15),
+                              height: 20,
+                              decoration: BoxDecoration(
+                                color: getColorForSummary(
+                                    events[index]["summary"]),
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  events[index]['summary'] ?? '予定${index + 1}',
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.normal,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
-                              );
-                            } else {
-                              return null;
-                            }
-                          },
-                        ),
+                              ),
+                            );
+                          } else {
+                            return null;
+                          }
+                        },
                       ),
                     ),
                   ],
                 ),
               ),
             ),
+
+            //天気
             Expanded(
               flex: 2,
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    child: Container(
-                      child: Image.asset(
-                        (weather["text"] == null)
-                            ? "assets/home_page/loading.gif"
-                            : getImagePath(weather["text"]),
-                        width: 110,
-                        height: 110,
-                      ),
+                    child: Image.asset(
+                      (weather["text"] == null)
+                          ? "assets/home_page/loading.gif"
+                          : getImagePath(weather["text"]),
+                      width: 110,
+                      height: 110,
                     ),
                   ),
                   Expanded(
@@ -388,7 +366,7 @@ class _HomePageState extends State<HomePage> {
                                     mainAxisSpacing:
                                         20, // Adjust main axis spacing
                                     crossAxisSpacing:
-                                        0, // Adjust cross axis spacing
+                                        2, // Adjust cross axis spacing
                                     childAspectRatio: 4.5,
                                   ),
                                   shrinkWrap: true,
@@ -410,13 +388,17 @@ class _HomePageState extends State<HomePage> {
                                                 () => _checks[itemIndex] =
                                                     newValue),
                                           ),
-                                          Text(
-                                            item['name'] ?? '',
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.normal,
+                                          Expanded(
+                                            child: Text(
+                                              item['name'] ?? '',
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                              textAlign: TextAlign.left,
                                             ),
-                                            textAlign: TextAlign.center,
                                           ),
                                           // アイコンとテキストの間隔を設定します
                                         ],
@@ -436,6 +418,8 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+
+            //いってらっしゃいコメント
             Container(
               margin: const EdgeInsets.only(bottom: 30),
               child: const Text(
@@ -446,6 +430,8 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+
+            //ダウンバーのスペースを取るため
             Expanded(flex: 1, child: Container())
           ],
         ),

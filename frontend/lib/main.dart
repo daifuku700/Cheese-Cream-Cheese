@@ -6,6 +6,7 @@ import 'pages/schedule_page.dart';
 import 'pages/home_page.dart';
 
 Future main() async {
+  //スプラッシュスクリーン
   await Future.delayed(const Duration(seconds: 1));
   FlutterNativeSplash.remove();
   runApp(const MyApp());
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+//画面が変わらない用のクラス（StatefulWidget)
 class MainPage extends StatefulWidget {
   const MainPage({super.key, required this.title});
   final String title;
@@ -36,6 +38,7 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
+//画面が変わる部分(State)
 class _MainPageState extends State<MainPage> {
   //画面推移に使う関数・配列
   int index = 0;

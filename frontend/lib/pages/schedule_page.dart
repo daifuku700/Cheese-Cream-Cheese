@@ -385,6 +385,8 @@ class _SchedulePageState extends State<SchedulePage> {
                                             return Text(
                                               item["items"][index]["name"]
                                                   .toString(),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
                                               style: const TextStyle(
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.normal,
