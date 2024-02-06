@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class HomeToday extends StatelessWidget {
   const HomeToday(
-      {required this.currentDateString, required this.homeTodaySize});
+      {super.key,
+      required this.currentDateString,
+      required this.homeTodaySize});
 
   final String currentDateString;
   final int homeTodaySize;

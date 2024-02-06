@@ -1,5 +1,8 @@
 import 'dart:convert';
 
+import 'package:cream_cheese_cream/pages/HomePageWidgets/home_schedule.dart';
+import 'package:cream_cheese_cream/pages/HomePageWidgets/home_to_bring.dart';
+import 'package:cream_cheese_cream/pages/HomePageWidgets/home_weather.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -18,11 +21,7 @@ class _HomePageState extends State<HomePage> {
   //ここにAPIから取得したデータを収納
   List<Map<String, dynamic>> events = [];
   Map<String, dynamic> weather = {};
-  bool displayed = false;
   bool loading = false;
-  //for check box
-  static const int _count = 6;
-  final List<bool?> _checks = List.generate(_count, (_) => false);
 
   DateTime currentDate = DateTime.now();
 
@@ -91,77 +90,6 @@ class _HomePageState extends State<HomePage> {
     return formatter.format(now);
   }
 
-  //天気の画像を変える
-  String getImagePath(String weatherText) {
-    if (weatherText != "" && weatherText.isNotEmpty) {
-      switch (weatherText[0]) {
-        case '晴':
-          return "assets/home_page/sunny.png";
-        case '曇':
-          return "assets/home_page/cloudy.png";
-        case '雨':
-          return "assets/home_page/rain.png";
-        case '雪':
-          return "assets/home_page/snow.png";
-        default:
-          return "assets/home_page/sunny_cloudy.png";
-      }
-    } else {
-      return "assets/home_page/sunny_cloudy.png";
-    }
-  }
-
-  //温度を取得
-  String getTemp(
-    String highToday,
-    String highTmrw,
-    String lowToday,
-    String lowTmrw,
-  ) {
-    String high, low;
-    if (highToday != '') {
-      high = highToday;
-    } else {
-      high = highTmrw;
-    }
-    if (lowToday != '') {
-      // Corrected from highToday
-      low = lowToday;
-    } else {
-      low = lowTmrw;
-    }
-    return '最高気温：$high℃\n最低気温：$low℃';
-  }
-
-  //今日か確かめる
-  bool isToday(String date) {
-    DateTime currentDate = DateTime.now();
-    DateTime eventDate = DateTime.parse(date);
-
-    return currentDate.year == eventDate.year &&
-        currentDate.month == eventDate.month &&
-        currentDate.day == eventDate.day;
-  }
-
-  Color getColorForSummary(String summary) {
-    switch (summary) {
-      case "授業":
-        return const Color(0xFFA9CF58); // Green
-      case "バイト":
-        return const Color(0xFFFFC107); // Yellow
-      case "打ち上げ":
-        return const Color(0xFFFF7575); // Pink
-      case "試験":
-        return const Color(0xFF75CDFF); // Blue
-      case "飲み会":
-        return const Color(0xFFFF7575); // Orange
-      case "MTG":
-        return const Color(0xFFD39CFF); // Purple
-      default:
-        return Colors.grey; // Default color for unknown summary
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     currentDateString = _getFormattedDate();
@@ -175,8 +103,6 @@ class _HomePageState extends State<HomePage> {
                 color: const Color(0xFFA4D4FF), size: 100),
           ));
     }
-
-    displayed = false;
     return Scaffold(
       backgroundColor: const Color(0xFFEFF8FF),
       body: Center(
@@ -189,235 +115,17 @@ class _HomePageState extends State<HomePage> {
             ),
 
             //今日の予定
-            Expanded(
-              flex: 2,
-              child: Container(
-                padding: const EdgeInsets.all(10.0),
-                margin: const EdgeInsets.all(15.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5), // Set shadow color
-                      spreadRadius: 2, // Set the spread radius of the shadow
-                      blurRadius: 5, // Set the blur radius of the shadow
-                      offset:
-                          const Offset(0, 3), // Set the offset of the shadow
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: <Widget>[
-                    const Text(
-                      '今日の予定', // Add your text here
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.normal,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-
-                    //一つ一つの予定
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: events.length,
-                        itemBuilder: (context, index) {
-                          //同日の予定しか表示させないための仕組み
-                          DateTime eventDate =
-                              DateTime.parse(events[index]['date']);
-                          if (eventDate.year == currentDate.year &&
-                              eventDate.month == currentDate.month &&
-                              eventDate.day == currentDate.day) {
-                            return Container(
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 15),
-                              height: 20,
-                              decoration: BoxDecoration(
-                                color: getColorForSummary(
-                                    events[index]["summary"]),
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  events[index]['summary'] ?? '予定${index + 1}',
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            );
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            HomeSchedule(
+              events: events,
+              currentDate: currentDate,
+              homeScheduleSize: 2,
             ),
 
             //天気
-            Expanded(
-              flex: 2,
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Image.asset(
-                      (weather["text"] == null)
-                          ? "assets/home_page/loading.gif"
-                          : getImagePath(weather["text"]),
-                      width: 110,
-                      height: 110,
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(10.0),
-                      margin: const EdgeInsets.all(15.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Text(
-                          (weather.containsKey('temperature_max') &&
-                                  weather.containsKey(
-                                      'temperature_max_tomorrow') &&
-                                  weather.containsKey('temperature_min') &&
-                                  weather
-                                      .containsKey('temperature_min_tomorrow'))
-                              ? getTemp(
-                                  weather['temperature_max'],
-                                  weather['temperature_max_tomorrow'],
-                                  weather['temperature_min'],
-                                  weather['temperature_min_tomorrow'],
-                                )
-                              : 'Temperature data not available',
-                          style: const TextStyle(
-                            fontSize: 20.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            HomeWeather(weather: weather, homeWeatherSize: 2),
 
             //持ち物リスト
-            Expanded(
-              flex: 2,
-              child: Container(
-                margin: const EdgeInsets.all(15.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20.0),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 5,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        'これ持った？',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.normal,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Expanded(
-                      // イベントを全て探索
-                      child: ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: events.length,
-                        itemBuilder: (context, index) {
-                          // 今日の日付のイベント＆まだ一回も出力してない場合のみアイテムを出力
-                          if (isToday(events[index]['date']) && !displayed) {
-                            displayed = true;
-                            return Column(
-                              children: [
-                                // イベントのアイテムを出力する
-                                GridView.builder(
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3,
-                                    mainAxisSpacing:
-                                        20, // Adjust main axis spacing
-                                    crossAxisSpacing:
-                                        2, // Adjust cross axis spacing
-                                    childAspectRatio: 4.5,
-                                  ),
-                                  shrinkWrap: true,
-                                  itemCount: events[index]['items'].length,
-                                  itemBuilder: (context, itemIndex) {
-                                    final item =
-                                        events[index]['items'][itemIndex];
-                                    return Container(
-                                      height: 5,
-                                      width: 5,
-                                      color: Colors.white,
-                                      child: Row(
-                                        children: [
-                                          // Initial state of the checkbox
-                                          Checkbox(
-                                            activeColor: Color(0xFFA4D4FF),
-                                            value: _checks[itemIndex],
-                                            onChanged: (newValue) => setState(
-                                                () => _checks[itemIndex] =
-                                                    newValue),
-                                          ),
-                                          Expanded(
-                                            child: Text(
-                                              item['name'] ?? '',
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.normal,
-                                              ),
-                                              textAlign: TextAlign.left,
-                                            ),
-                                          ),
-                                          // アイコンとテキストの間隔を設定します
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ],
-                            );
-                          } else {
-                            return Container(); // Return an empty container for events not matching today's date
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            HomeToBring(events: events, homeToBringSize: 2),
 
             //いってらっしゃいコメント
             Container(
