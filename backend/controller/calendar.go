@@ -101,7 +101,11 @@ func Calender(c *gin.Context) {
 	events, err := srv.Events.List("primary").ShowDeleted(false).
 		SingleEvents(true).TimeMin(t).MaxResults(100).OrderBy("startTime").Do()
 	if err != nil {
-		log.Fatalf("Unable to retrieve next ten of the user's events: %v", err)
+		os.Remove("api/token.json")
+		c.JSON(400, gin.H{
+			"error": "Token has been expired, please re-authenticate.",
+		})
+		return
 	}
 	if len(events.Items) == 0 {
 		fmt.Println("No upcoming events found.")
