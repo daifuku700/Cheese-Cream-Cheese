@@ -69,6 +69,29 @@ class _MainPageState extends State<MainPage> {
         elevation: 0,
         scrolledUnderElevation: 0.0,
       ),
+      //--ここから追加--
+      endDrawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            DrawerHeader(child: Text('User Info')),
+            ListTile(
+              title: Text('+  add your Google account'),
+              onTap: () {
+                // Do something
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text('-  logout from this account'),
+              onTap: () {
+                // Do something
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+      //--ここまで追加--
 
       //中身（各自のページファイルでいじる）
       body: screens[index],
